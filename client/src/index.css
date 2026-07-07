@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Modern BookMyTrip Theme */
+  --color-brand-blue: #D9281C; /* Main Red */
+  --color-brand-dark: #111827; /* Charcoal */
+  
+  --color-primary: #D9281C;
+  --color-accent: #111827; /* Dark Gray Accent */
+  
+  --color-offer-coral: #F97316;
+  --color-offer-peach: #FDBA74;
+  --color-offer-purple: #7C3AED;
+  --color-offer-red: #DC2626;
+  
+  --color-status-confirmed-bg: #DCFCE7;
+  --color-status-confirmed-text: #166534;
+  
+  --color-status-waitlist-bg: #FEF3C7;
+  --color-status-waitlist-text: #92400E;
+  
+  --color-status-rac-bg: #FFEDD5;
+  --color-status-rac-text: #9A3412;
+  
+  --color-bg-page: #F8FAFC;
+  --color-bg-alt: #FFFFFF;
+  
+  /* Solid colors for gradients */
+  --color-brand-gradient-start: #DC2626;
+  --color-brand-gradient-end: #B91C1C;
+  --color-accent-gradient-start: #1F2937;
+  --color-accent-gradient-end: #111827;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-bg-page);
+    color: var(--color-brand-dark);
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white border border-gray-200 shadow-md;
+  }
+  .glass-light {
+    @apply bg-white border border-gray-100 shadow-sm;
+  }
+  .text-gradient {
+    @apply text-blue-900;
+  }
+  .neo-shadow {
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+  .hover-card-effect {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-blue-900/20;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
