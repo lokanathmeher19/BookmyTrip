@@ -10,6 +10,8 @@ import Booking from './pages/Booking';
 import BookingSuccess from './pages/BookingSuccess';
 import Dashboard from './pages/Dashboard';
 import Chatbot from './components/layout/Chatbot';
+import Trips from './pages/Trips';
+import Wishlist from './pages/Wishlist';
 
 const App = () => {
   return (
@@ -25,6 +27,8 @@ const App = () => {
             <Route path="/booking/:id" element={<Booking />} />
             <Route path="/booking-success/:id" element={<BookingSuccess />} />
             <Route path="/account" element={<Dashboard />} />
+            <Route path="/trips" element={<Trips />} />
+            <Route path="/wishlist" element={<Wishlist />} />
           </Routes>
         </main>
         <Chatbot />
