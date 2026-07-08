@@ -6,7 +6,7 @@ const Wishlist = () => {
     <div className="relative min-h-screen">
       {/* Premium Video Background */}
       <div className="fixed inset-0 w-full h-full bg-black z-0">
-        <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover object-center z-0 opacity-50">
+        <video autoPlay loop muted playsInline poster="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1920&q=80" className="absolute inset-0 w-full h-full object-cover object-center z-0 opacity-50">
           <source src="/lv_0_20260706232615.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80 z-10" />

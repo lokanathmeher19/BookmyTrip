@@ -60,7 +60,7 @@ const BookingSuccess = () => {
   if (!booking) return <div className="min-h-screen flex items-center justify-center">Loading Ticket...</div>;
 
   return (
-    <div className="bg-gray-50 min-h-screen py-12 px-4">
+    <div className="bg-gray-50 min-h-screen pt-28 pb-12 px-4">
       <div className="max-w-2xl mx-auto bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100">
         <div className="bg-[var(--color-status-confirmed-bg)] p-8 text-center border-b border-[var(--color-status-confirmed-text)]/20">
           <CheckCircle className="w-16 h-16 text-[var(--color-status-confirmed-text)] mx-auto mb-4" />

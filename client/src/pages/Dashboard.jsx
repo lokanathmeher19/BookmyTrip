@@ -26,7 +26,7 @@ const Dashboard = () => {
   if (!user) return <div className="p-8 text-center">Please login to view dashboard</div>;
 
   return (
-    <div className="bg-gray-50 min-h-screen py-12">
+    <div className="bg-gray-50 min-h-screen pt-28 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row gap-8">
           {/* Sidebar */}

@@ -14,7 +14,7 @@ import offerRoutes from './routes/offerRoutes.js';
 import pnrRoutes from './routes/pnrRoutes.js';
 
 // Load env vars
-dotenv.config();
+dotenv.config({ override: true });
 
 // Connect to database
 connectDB();

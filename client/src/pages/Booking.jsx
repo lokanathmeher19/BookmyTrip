@@ -91,7 +91,7 @@ const Booking = () => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen py-12">
+    <div className="bg-gray-50 min-h-screen pt-28 pb-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-3xl shadow-md p-8">
           <h2 className="text-2xl font-bold mb-6 border-b pb-4">Passenger Details</h2>

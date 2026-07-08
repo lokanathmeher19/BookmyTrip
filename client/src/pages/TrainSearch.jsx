@@ -27,7 +27,7 @@ const TrainSearch = () => {
   }, []);
 
   return (
-    <div className="bg-gray-50 min-h-screen py-8">
+    <div className="bg-gray-50 min-h-screen pt-28 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-2xl font-bold mb-6 text-gray-900">Train Search Results</h2>
         <div className="flex flex-col lg:flex-row gap-8">

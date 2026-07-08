@@ -158,9 +158,9 @@ const TabSwitcher = () => {
   };
 
   return (
-    <div className="bg-white rounded-[1.5rem] md:rounded-[2rem] pt-0 pb-6 px-5 md:px-8 -mt-24 relative z-10 mx-4 max-w-4xl lg:mx-auto shadow-2xl border border-gray-200 overflow-hidden">
+    <div className="bg-white rounded-[1.5rem] md:rounded-[2rem] pt-0 pb-6 px-5 md:px-8 -mt-24 relative z-10 mx-4 max-w-4xl lg:mx-auto shadow-2xl border border-gray-200">
       {/* Tabs - Integrated into top */}
-      <div className="flex flex-nowrap overflow-x-auto hide-scrollbar border-b border-gray-200 mb-8 -mx-5 md:-mx-8 px-5 md:px-8 bg-gray-50/50">
+      <div className="flex flex-nowrap overflow-x-auto hide-scrollbar border-b border-gray-200 mb-8 -mx-5 md:-mx-8 px-5 md:px-8 bg-gray-50/50 rounded-t-[1.5rem] md:rounded-t-[2rem]">
         <div className="flex gap-2 mx-auto pt-2">
           {tabs.map((tab) => (
             <button
