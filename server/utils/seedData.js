@@ -21,16 +21,16 @@ const importData = async () => {
     await Destination.deleteMany();
 
     const destinations = [
-      { city: 'Varanasi', state: 'Uttar Pradesh', image: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', badgeText: 'Spiritual' },
-      { city: 'Jaipur', state: 'Rajasthan', image: 'https://images.unsplash.com/photo-1477587458883-47145ed94245?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', badgeText: 'Heritage' },
-      { city: 'Goa', state: 'Goa', image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', badgeText: 'Beaches' },
-      { city: 'Kerala', state: 'Kerala', image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', badgeText: 'Nature' },
-      { city: 'Agra', state: 'Uttar Pradesh', image: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=800&q=80', badgeText: 'Monument' },
-      { city: 'Darjeeling', state: 'West Bengal', image: 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', badgeText: 'Hills' },
-      { city: 'Manali', state: 'Himachal Pradesh', image: 'https://images.unsplash.com/photo-1605649487212-4dff5b4f0b24?auto=format&fit=crop&w=800&q=80', badgeText: 'Mountains' },
-      { city: 'Udaipur', state: 'Rajasthan', image: 'https://images.unsplash.com/photo-1615836245337-f58c735d496a?auto=format&fit=crop&w=800&q=80', badgeText: 'Lakes' },
+      { city: 'Varanasi', state: 'Uttar Pradesh', image: 'https://images.unsplash.com/photo-1587595431973-160d0d94add1?auto=format&fit=crop&w=800&q=80', badgeText: 'Spiritual' },
+      { city: 'Jaipur', state: 'Rajasthan', image: 'https://images.unsplash.com/photo-1477587458883-47145ed94245?auto=format&fit=crop&w=800&q=80', badgeText: 'Heritage' },
+      { city: 'Goa', state: 'Goa', image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=800&q=80', badgeText: 'Beaches' },
+      { city: 'Kerala', state: 'Kerala', image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=800&q=80', badgeText: 'Nature' },
+      { city: 'Agra', state: 'Uttar Pradesh', image: 'https://images.unsplash.com/photo-1564507592224-2fc960cb1d06?auto=format&fit=crop&w=800&q=80', badgeText: 'Monument' },
+      { city: 'Darjeeling', state: 'West Bengal', image: 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=800&q=80', badgeText: 'Hills' },
+      { city: 'Manali', state: 'Himachal Pradesh', image: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=800&q=80', badgeText: 'Mountains' },
+      { city: 'Udaipur', state: 'Rajasthan', image: 'https://images.unsplash.com/photo-1571536802807-30451e392683?auto=format&fit=crop&w=800&q=80', badgeText: 'Lakes' },
       { city: 'Munnar', state: 'Kerala', image: 'https://images.unsplash.com/photo-1593693397690-362bc6d73489?auto=format&fit=crop&w=800&q=80', badgeText: 'Tea Gardens' },
-      { city: 'Rishikesh', state: 'Uttarakhand', image: 'https://images.unsplash.com/photo-1626296317208-a5cb747353f4?auto=format&fit=crop&w=800&q=80', badgeText: 'Adventure' },
+      { city: 'Rishikesh', state: 'Uttarakhand', image: 'https://images.unsplash.com/photo-1605225576856-cb3a901844b2?auto=format&fit=crop&w=800&q=80', badgeText: 'Adventure' },
       { city: 'Andaman', state: 'Andaman Island', image: 'https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?auto=format&fit=crop&w=800&q=80', badgeText: 'Islands' },
       { city: 'Srinagar', state: 'Jammu & Kashmir', image: 'https://images.unsplash.com/photo-1595815771614-ade9d652a65d?auto=format&fit=crop&w=800&q=80', badgeText: 'Paradise' }
     ];
@@ -157,6 +157,30 @@ const importData = async () => {
         bankName: 'BHIM UPI',
         code: 'UPI15',
         terms: 'T&C Apply. Valid once per user.'
+      },
+      {
+        title: 'SBI Credit Cards',
+        discountText: 'Flat 12% Off',
+        accentColor: '#1976D2', // SBI blue
+        bankName: 'SBI',
+        code: 'SBI12',
+        terms: 'T&C Apply. Valid on Flights.'
+      },
+      {
+        title: 'ICICI Bank Debit Cards',
+        discountText: 'Flat ₹500 Off',
+        accentColor: '#F57C00', // ICICI orange
+        bankName: 'ICICI',
+        code: 'ICICI500',
+        terms: 'T&C Apply. Valid on Hotels.'
+      },
+      {
+        title: 'Axis Bank Cards',
+        discountText: 'Flat 15% Off',
+        accentColor: '#880E4F', // Axis maroon
+        bankName: 'AXIS',
+        code: 'AXIS15',
+        terms: 'T&C Apply. Max discount ₹1500.'
       }
     ];
 

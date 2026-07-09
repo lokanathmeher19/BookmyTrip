@@ -1,7 +1,7 @@
 import React from 'react';
 import { CreditCard, Wifi } from 'lucide-react';
 
-const OfferCard = ({ title, description, code, type, value, bankLogo }) => {
+const OfferCard = ({ title, terms, code, discountText, bankName }) => {
   const getBankCardStyles = (bank) => {
     switch (bank) {
       case 'HDFC':
@@ -46,6 +46,20 @@ const OfferCard = ({ title, description, code, type, value, bankLogo }) => {
           badgeBg: 'bg-white text-red-700',
           btnBg: 'bg-red-700 text-white hover:bg-red-600',
         };
+      case 'HSBC':
+        return {
+          cardBg: 'bg-gradient-to-br from-purple-800 via-purple-700 to-fuchsia-800',
+          textColor: 'text-white',
+          badgeBg: 'bg-purple-900 text-white',
+          btnBg: 'bg-white text-purple-900 hover:bg-purple-50',
+        };
+      case 'BHIM UPI':
+        return {
+          cardBg: 'bg-gradient-to-br from-teal-700 via-emerald-600 to-teal-800',
+          textColor: 'text-white',
+          badgeBg: 'bg-emerald-800 text-white',
+          btnBg: 'bg-white text-emerald-900 hover:bg-emerald-50',
+        };
       default:
         return {
           cardBg: 'bg-gradient-to-br from-gray-800 to-gray-900',
@@ -56,7 +70,7 @@ const OfferCard = ({ title, description, code, type, value, bankLogo }) => {
     }
   };
 
-  const styles = getBankCardStyles(bankLogo);
+  const styles = getBankCardStyles(bankName);
 
   return (
     <div className={`group rounded-2xl p-6 shadow-xl flex flex-col justify-between h-full relative overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 aspect-[1.586] ${styles.cardBg} border border-white/10`}>
@@ -66,9 +80,9 @@ const OfferCard = ({ title, description, code, type, value, bankLogo }) => {
       {/* Top Row: Badge & Bank Logo */}
       <div className="flex justify-between items-start relative z-10">
         <div className={`px-3 py-1 rounded-md text-xs font-black tracking-wider shadow-sm ${styles.badgeBg}`}>
-          {type === 'PERCENTAGE' ? `${value}% OFF` : `₹${value} OFF`}
+          {discountText}
         </div>
-        {bankLogo && <div className={`text-sm font-black italic tracking-widest ${styles.textColor}`}>{bankLogo}</div>}
+        {bankName && <div className={`text-sm font-black italic tracking-widest ${styles.textColor}`}>{bankName}</div>}
       </div>
 
       {/* Chip & Contactless */}
@@ -85,7 +99,7 @@ const OfferCard = ({ title, description, code, type, value, bankLogo }) => {
       {/* Middle: Details */}
       <div className="relative z-10 mt-auto mb-4">
         <h4 className={`font-bold text-lg mb-1 drop-shadow-md ${styles.textColor}`}>{title}</h4>
-        <p className={`text-xs opacity-80 line-clamp-1 ${styles.textColor}`}>{description}</p>
+        <p className={`text-xs opacity-80 line-clamp-1 ${styles.textColor}`}>{terms}</p>
       </div>
 
       {/* Bottom Row: Code & Button */}
