@@ -6,6 +6,7 @@ import Flight from '../models/Flight.js';
 import Bus from '../models/Bus.js';
 import Hotel from '../models/Hotel.js';
 import Offer from '../models/Offer.js';
+import Destination from '../models/Destination.js';
 
 dotenv.config();
 connectDB();
@@ -17,6 +18,22 @@ const importData = async () => {
     await Bus.deleteMany();
     await Hotel.deleteMany();
     await Offer.deleteMany();
+    await Destination.deleteMany();
+
+    const destinations = [
+      { city: 'Varanasi', state: 'Uttar Pradesh', image: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', badgeText: 'Spiritual' },
+      { city: 'Jaipur', state: 'Rajasthan', image: 'https://images.unsplash.com/photo-1477587458883-47145ed94245?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', badgeText: 'Heritage' },
+      { city: 'Goa', state: 'Goa', image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', badgeText: 'Beaches' },
+      { city: 'Kerala', state: 'Kerala', image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', badgeText: 'Nature' },
+      { city: 'Agra', state: 'Uttar Pradesh', image: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=800&q=80', badgeText: 'Monument' },
+      { city: 'Darjeeling', state: 'West Bengal', image: 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', badgeText: 'Hills' },
+      { city: 'Manali', state: 'Himachal Pradesh', image: 'https://images.unsplash.com/photo-1605649487212-4dff5b4f0b24?auto=format&fit=crop&w=800&q=80', badgeText: 'Mountains' },
+      { city: 'Udaipur', state: 'Rajasthan', image: 'https://images.unsplash.com/photo-1615836245337-f58c735d496a?auto=format&fit=crop&w=800&q=80', badgeText: 'Lakes' },
+      { city: 'Munnar', state: 'Kerala', image: 'https://images.unsplash.com/photo-1593693397690-362bc6d73489?auto=format&fit=crop&w=800&q=80', badgeText: 'Tea Gardens' },
+      { city: 'Rishikesh', state: 'Uttarakhand', image: 'https://images.unsplash.com/photo-1626296317208-a5cb747353f4?auto=format&fit=crop&w=800&q=80', badgeText: 'Adventure' },
+      { city: 'Andaman', state: 'Andaman Island', image: 'https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?auto=format&fit=crop&w=800&q=80', badgeText: 'Islands' },
+      { city: 'Srinagar', state: 'Jammu & Kashmir', image: 'https://images.unsplash.com/photo-1595815771614-ade9d652a65d?auto=format&fit=crop&w=800&q=80', badgeText: 'Paradise' }
+    ];
 
     const trains = [
       {
@@ -148,6 +165,7 @@ const importData = async () => {
     await Bus.insertMany(buses);
     await Hotel.insertMany(hotels);
     await Offer.insertMany(offers);
+    await Destination.insertMany(destinations);
 
     console.log('Data Imported!');
     process.exit();

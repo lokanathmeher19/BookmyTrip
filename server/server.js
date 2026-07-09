@@ -4,6 +4,7 @@ import cors from 'cors';
 import connectDB from './config/db.js';
 
 import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 import trainRoutes from './routes/trainRoutes.js';
 import flightRoutes from './routes/flightRoutes.js';
 import busRoutes from './routes/busRoutes.js';
@@ -12,6 +13,7 @@ import bookingRoutes from './routes/bookingRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import offerRoutes from './routes/offerRoutes.js';
 import pnrRoutes from './routes/pnrRoutes.js';
+import destinationRoutes from './routes/destinationRoutes.js';
 
 // Load env vars
 dotenv.config({ override: true });
@@ -32,6 +34,7 @@ app.get('/', (req, res) => {
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/trains', trainRoutes);
 app.use('/api/flights', flightRoutes);
 app.use('/api/buses', busRoutes);
@@ -41,6 +44,7 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/offers', offerRoutes);
 app.use('/api/coupons', offerRoutes);
 app.use('/api/pnr', pnrRoutes);
+app.use('/api/destinations', destinationRoutes);
 
 // Error Handler Middleware
 app.use((err, req, res, next) => {

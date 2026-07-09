@@ -21,7 +21,15 @@ const TabSwitcher = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    navigate(`/${activeTab.toLowerCase()}/search`);
+    const tabUrlMap = {
+      'Trains': '/trains/search',
+      'Flights': '/flights/search',
+      'Bus': '/bus/search',
+      'Hotels': '/hotels/search'
+    };
+    if (tabUrlMap[activeTab]) {
+      navigate(tabUrlMap[activeTab]);
+    }
   };
 
   const renderForm = () => {
@@ -79,7 +87,7 @@ const TabSwitcher = () => {
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
             className="w-full"
           >
-            <form className="flex flex-col gap-4" onSubmit={(e) => { e.preventDefault(); navigate('/search?type=flight'); }}>
+            <form className="flex flex-col gap-4" onSubmit={handleSearch}>
               <div className="flex gap-6 mb-2">
                 <label className="flex items-center space-x-2 cursor-pointer">
                   <input type="radio" name="tripType" value="oneWay" defaultChecked className="text-[var(--color-brand-blue)] focus:ring-[var(--color-brand-blue)]" />
