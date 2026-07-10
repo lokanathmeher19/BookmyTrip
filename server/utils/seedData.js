@@ -21,9 +21,9 @@ const importData = async () => {
     await Destination.deleteMany();
 
     const destinations = [
-      { city: 'Varanasi', state: 'Uttar Pradesh', image: '/80327501f14626b67a9abb6888245b7f.jpg', badgeText: 'Spiritual', imagePosition: 'object-[center_25%]' },
-      { city: 'Jaipur', state: 'Rajasthan', image: 'https://images.unsplash.com/photo-1477587458883-47145ed94245?auto=format&fit=crop&w=800&q=80', badgeText: 'Heritage' },
-      { city: 'Goa', state: 'Goa', image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=800&q=80', badgeText: 'Beaches' },
+      { city: 'Varanasi', state: 'Uttar Pradesh', image: '/80327501f14626b67a9abb6888245b7f.jpg', badgeText: 'Spiritual', imageFit: 'object-fill' },
+      { city: 'Jaipur', state: 'Rajasthan', image: '/videoframe_3122.png', badgeText: 'Heritage', imageFit: 'object-fill' },
+      { city: 'Goa', state: 'Goa', image: '/f61450754b5529bcf7db0abe6ef6dc91.jpg', badgeText: 'Beaches', imageFit: 'object-fill' },
       { city: 'Kerala', state: 'Kerala', image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=800&q=80', badgeText: 'Nature' },
       { city: 'Agra', state: 'Uttar Pradesh', image: 'https://images.unsplash.com/photo-1564507592224-2fc960cb1d06?auto=format&fit=crop&w=800&q=80', badgeText: 'Monument' },
       { city: 'Darjeeling', state: 'West Bengal', image: 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=800&q=80', badgeText: 'Hills' },

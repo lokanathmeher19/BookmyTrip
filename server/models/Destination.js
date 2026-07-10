@@ -6,7 +6,8 @@ const destinationSchema = new mongoose.Schema(
     state: { type: String, required: true },
     image: { type: String, required: true },
     badgeText: { type: String, required: true },
-    imagePosition: { type: String, default: 'object-center' }
+    imagePosition: { type: String, default: 'object-center' },
+    imageFit: { type: String, default: 'object-cover' }
   },
   { timestamps: true }
 );
