@@ -1,7 +1,7 @@
 import React from 'react';
 import { MapPin } from 'lucide-react';
 
-const DestinationCard = ({ image, city, state, badgeText }) => {
+const DestinationCard = ({ image, city, state, badgeText, imagePosition = 'object-center' }) => {
   return (
     <div className="group cursor-pointer w-full aspect-[3/4] bg-white rounded-[2rem] overflow-hidden relative shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-white/20">
       <div className="w-full h-full overflow-hidden relative">
@@ -9,7 +9,7 @@ const DestinationCard = ({ image, city, state, badgeText }) => {
           src={image} 
           alt={city} 
           onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=800&q=80' }}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+          className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out ${imagePosition}`}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-300" />
       </div>
