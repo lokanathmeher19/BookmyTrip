@@ -26,12 +26,12 @@ const importData = async () => {
       { city: 'Goa', state: 'Goa', image: '/f61450754b5529bcf7db0abe6ef6dc91.jpg', badgeText: 'Beaches', imageFit: 'object-fill' },
       { city: 'Kerala', state: 'Kerala', image: '/6c0f13d6ca677db41ef88f85427dc5f1.jpg', badgeText: 'Nature', imageFit: 'object-fill' },
       { city: 'Agra', state: 'Uttar Pradesh', image: '/fcb90a2a97517b2a1a92b6fa69b79398.jpg', badgeText: 'Monument', imageFit: 'object-fill' },
-      { city: 'Darjeeling', state: 'West Bengal', image: 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=800&q=80', badgeText: 'Hills' },
-      { city: 'Manali', state: 'Himachal Pradesh', image: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=800&q=80', badgeText: 'Mountains' },
+      { city: 'Darjeeling', state: 'West Bengal', image: '/9614889996fc869c005302c9392c8d9c.jpg', badgeText: 'Hills' },
+      { city: 'Manali', state: 'Himachal Pradesh', image: '/5ac05308a038c7f9afc04577e0d5833c.jpg', badgeText: 'Mountains', imageFit: 'object-contain', imagePosition: 'object-pos-down-little' },
       { city: 'Udaipur', state: 'Rajasthan', image: '/udiapur..jpg', badgeText: 'Lakes' },
       { city: 'Munnar', state: 'Kerala', image: '/download.png', badgeText: 'Tea Gardens' },
       { city: 'Rishikesh', state: 'Uttarakhand', image: '/35390aeaeb114e63ecc70b1d4ee004b5.jpg', badgeText: 'Adventure' },
-      { city: 'Andaman', state: 'Andaman Island', image: 'https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?auto=format&fit=crop&w=800&q=80', badgeText: 'Islands' },
+      { city: 'Andaman', state: 'Andaman Island', image: '/6d1a91eb905bf1e12a845fbc9cb58690.jpg', badgeText: 'Islands' },
       { city: 'Srinagar', state: 'Jammu & Kashmir', image: 'https://images.unsplash.com/photo-1595815771614-ade9d652a65d?auto=format&fit=crop&w=800&q=80', badgeText: 'Paradise' }
     ];
 

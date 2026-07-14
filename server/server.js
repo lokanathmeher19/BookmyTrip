@@ -13,7 +13,7 @@ import bookingRoutes from './routes/bookingRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import offerRoutes from './routes/offerRoutes.js';
 import pnrRoutes from './routes/pnrRoutes.js';
-import destinationRoutes from './routes/destinationRoutes.js';
+import destinationRoutes from './routes/destinationRoutes.js'; 
 
 // Load env vars
 dotenv.config({ override: true });
