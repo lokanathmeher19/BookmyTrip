@@ -23,6 +23,18 @@ const userSchema = new mongoose.Schema(
         itemType: String, // 'hotel', 'flight', etc.
         itemId: mongoose.Schema.Types.ObjectId
       }
+    ],
+    walletBalance: {
+      type: Number,
+      default: 0
+    },
+    transactions: [
+      {
+        amount: Number,
+        type: { type: String, enum: ['CREDIT', 'DEBIT'] },
+        description: String,
+        date: { type: Date, default: Date.now }
+      }
     ]
   },
   { timestamps: true }

@@ -171,7 +171,7 @@ const destinations = [
     name: 'Srinagar',
     state: 'Jammu & Kashmir',
     category: ['Paradise'],
-    imageUrl: 'https://images.unsplash.com/photo-1595815771614-ade9d652a65d?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '/From snow adventures to dreamy houseboats - Kashmir has it all!.jpg',
     featured: true,
     longDescription: 'The summer capital of Jammu and Kashmir, Srinagar is famous for its beautiful Dal Lake, Mughal Gardens, and traditional houseboats.',
     bestTimeToVisit: 'April to October',

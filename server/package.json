@@ -19,6 +19,7 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.7.3",
     "multer": "^2.2.0",
+    "node-cache": "^5.1.2",
     "zod": "^4.4.3"
   }
 }

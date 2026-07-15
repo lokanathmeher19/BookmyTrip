@@ -32,7 +32,7 @@ const importData = async () => {
       { city: 'Munnar', state: 'Kerala', image: '/download.png', badgeText: 'Tea Gardens' },
       { city: 'Rishikesh', state: 'Uttarakhand', image: '/35390aeaeb114e63ecc70b1d4ee004b5.jpg', badgeText: 'Adventure' },
       { city: 'Andaman', state: 'Andaman Island', image: '/6d1a91eb905bf1e12a845fbc9cb58690.jpg', badgeText: 'Islands' },
-      { city: 'Srinagar', state: 'Jammu & Kashmir', image: 'https://images.unsplash.com/photo-1595815771614-ade9d652a65d?auto=format&fit=crop&w=800&q=80', badgeText: 'Paradise' }
+      { city: 'Srinagar', state: 'Jammu & Kashmir', image: '/From snow adventures to dreamy houseboats - Kashmir has it all!.jpg', badgeText: 'Paradise' }
     ];
 
     const trains = [
