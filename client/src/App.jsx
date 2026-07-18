@@ -12,6 +12,7 @@ import HotelSearch from './pages/HotelSearch';
 import Booking from './pages/Booking';
 import BookingSuccess from './pages/BookingSuccess';
 import Dashboard from './pages/Dashboard';
+import AdminDashboard from './pages/admin/AdminDashboard';
 import Chatbot from './components/layout/Chatbot';
 import Trips from './pages/Trips';
 import Wishlist from './pages/Wishlist';
@@ -35,6 +36,7 @@ const App = () => {
             <Route path="/account" element={<Dashboard />} />
             <Route path="/trips" element={<Trips />} />
             <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/admin" element={<AdminDashboard />} />
           </Routes>
         </main>
         <Chatbot />

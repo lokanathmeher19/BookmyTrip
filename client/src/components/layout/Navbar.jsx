@@ -168,6 +168,11 @@ const Navbar = () => {
             {/* Auth Button */}
             {user ? (
               <div className="flex items-center space-x-3">
+                {user.isAdmin && (
+                  <Link to="/admin" className="hidden lg:flex items-center text-sm font-bold text-[#FFB700] hover:text-[#FFB700]/80 px-2 py-1 rounded-lg hover:bg-white/10 transition-colors">
+                    Admin Panel
+                  </Link>
+                )}
                 <Link to="/account" className="flex items-center text-sm font-medium text-gray-300 hover:text-white px-2 py-1 rounded-lg hover:bg-white/10 transition-colors">
                   <User className="w-4 h-4 mr-1.5" />
                   {user.name}
