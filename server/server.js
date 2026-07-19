@@ -15,6 +15,7 @@ import offerRoutes from './routes/offerRoutes.js';
 import pnrRoutes from './routes/pnrRoutes.js';
 import destinationRoutes from './routes/destinationRoutes.js'; 
 import walletRoutes from './routes/walletRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 
 // Load env vars
 dotenv.config({ override: true });
@@ -54,6 +55,7 @@ app.use('/api/coupons', offerRoutes);
 app.use('/api/pnr', pnrRoutes);
 app.use('/api/destinations', destinationRoutes);
 app.use('/api/wallet', walletRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Error Handler Middleware
 app.use((err, req, res, next) => {
