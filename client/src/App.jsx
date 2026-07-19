@@ -16,6 +16,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import Chatbot from './components/layout/Chatbot';
 import Trips from './pages/Trips';
 import Wishlist from './pages/Wishlist';
+import Offers from './pages/Offers';
 
 const App = () => {
   return (
@@ -36,6 +37,7 @@ const App = () => {
             <Route path="/account" element={<Dashboard />} />
             <Route path="/trips" element={<Trips />} />
             <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/offers" element={<Offers />} />
             <Route path="/admin" element={<AdminDashboard />} />
           </Routes>
         </main>

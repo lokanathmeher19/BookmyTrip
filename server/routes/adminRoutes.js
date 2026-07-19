@@ -13,6 +13,7 @@ import {
   updateBus,
   deleteBus
 } from '../controllers/adminController.js';
+import { createOffer, updateOffer, deleteOffer } from '../controllers/offerController.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -41,5 +42,9 @@ router.delete('/trains/:id', deleteTrain);
 router.post('/buses', createBus);
 router.put('/buses/:id', updateBus);
 router.delete('/buses/:id', deleteBus);
+// Offer Management
+router.post('/offers', createOffer);
+router.put('/offers/:id', updateOffer);
+router.delete('/offers/:id', deleteOffer);
 
 export default router;

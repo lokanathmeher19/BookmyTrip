@@ -8,7 +8,8 @@ import ManageFlights from './ManageFlights';
 import ManageHotels from './ManageHotels';
 import ManageTrains from './ManageTrains';
 import ManageBuses from './ManageBuses';
-import { LayoutDashboard, Users, Ticket, Plane, Building, Train, Bus } from 'lucide-react';
+import ManageOffers from './ManageOffers';
+import { LayoutDashboard, Users, Ticket, Plane, Building, Train, Bus, Tag } from 'lucide-react';
 
 const AdminDashboard = () => {
   const { user } = useAuth();
@@ -27,6 +28,7 @@ const AdminDashboard = () => {
     { id: 'hotels', label: 'Manage Hotels', icon: Building },
     { id: 'trains', label: 'Manage Trains', icon: Train },
     { id: 'buses', label: 'Manage Buses', icon: Bus },
+    { id: 'offers', label: 'Manage Offers', icon: Tag },
   ];
 
   return (
@@ -61,9 +63,10 @@ const AdminDashboard = () => {
         {activeTab === 'users' && <ManageUsers />}
         {activeTab === 'bookings' && <ManageBookings />}
         {activeTab === 'flights' && <ManageFlights />}
-        {activeTab === 'hotels' && <ManageHotels />}
-        {activeTab === 'trains' && <ManageTrains />}
-        {activeTab === 'buses' && <ManageBuses />}
+        { activeTab === 'hotels' && <ManageHotels /> }
+        { activeTab === 'trains' && <ManageTrains /> }
+        { activeTab === 'buses' && <ManageBuses /> }
+        { activeTab === 'offers' && <ManageOffers /> }
       </main>
     </div>
   );

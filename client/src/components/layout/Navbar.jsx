@@ -85,6 +85,18 @@ const Navbar = () => {
               </div>
             </Link>
 
+            {/* Offers */}
+            <Link to="/offers" className="hidden lg:flex items-center space-x-2 p-1.5 rounded-xl hover:bg-white/10 transition-colors cursor-pointer group">
+              <div className="w-8 h-8 rounded-full bg-gray-700/60 flex items-center justify-center group-hover:scale-105 transition-transform border border-gray-600/50 shadow-inner relative">
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse border border-white"></div>
+                <span className="text-xl">🏷️</span>
+              </div>
+              <div className="flex flex-col text-left">
+                <span className="text-white text-[13px] font-bold leading-tight">Offers</span>
+                <span className="text-gray-400 text-[10px] leading-tight">Save up to 50%</span>
+              </div>
+            </Link>
+
             {/* Currency/Lang */}
             <div className="relative hidden md:block">
               <button 
