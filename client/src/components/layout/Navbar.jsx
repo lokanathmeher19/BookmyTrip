@@ -1,22 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Train, Plane, Bus, Hotel, User, Moon, Sun, Briefcase, Heart, ChevronDown } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
+import { useCurrency } from '../../context/CurrencyContext';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { isDarkMode, toggleTheme } = useTheme();
+  const { currency, changeCurrency } = useCurrency();
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
-
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [isDarkMode]);
-
-  const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
 
   return (
     <div className="w-full flex justify-center fixed top-4 z-50 px-4">
@@ -103,15 +96,7 @@ const Navbar = () => {
                 onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
                 className="flex items-center space-x-1.5 p-1.5 px-3 rounded-xl hover:bg-white/10 transition-colors cursor-pointer border border-transparent hover:border-white/10"
               >
-                <div className="flex items-center justify-center w-5 h-[14px] rounded-[2px] overflow-hidden border border-white/20 shadow-sm mr-0.5">
-                  <svg width="20" height="14" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="20" height="14" fill="#FFFFFF"/>
-                    <rect width="20" height="4.66" fill="#FF9933"/>
-                    <rect y="9.33" width="20" height="4.66" fill="#138808"/>
-                    <circle cx="10" cy="7" r="1.5" fill="#000080"/>
-                  </svg>
-                </div>
-                <span className="text-white text-[13px] font-bold">INR | ENG</span>
+                <span className="text-white text-[13px] font-bold">{currency} | ENG</span>
                 <ChevronDown className={`w-3 h-3 text-gray-400 transition-transform duration-200 ${isLangMenuOpen ? 'rotate-180' : ''}`} />
               </button>
 
@@ -119,61 +104,30 @@ const Navbar = () => {
               {isLangMenuOpen && (
                 <div className="absolute top-full right-0 mt-3 w-48 bg-gray-900/95 backdrop-blur-2xl border border-white/20 rounded-xl shadow-2xl py-2 z-50 overflow-hidden">
                   <div className="px-4 py-2 border-b border-white/10 mb-1">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Select Region</p>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Select Currency</p>
                   </div>
-                  <button 
-                    onClick={() => setIsLangMenuOpen(false)}
-                    className="w-full text-left px-4 py-2.5 hover:bg-white/10 flex items-center justify-between group transition-colors"
-                  >
-                    <div className="flex items-center space-x-3">
-                      <div className="w-6 h-[16px] rounded-sm overflow-hidden flex-shrink-0 shadow-sm">
-                        <svg width="24" height="16" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-                          <rect width="20" height="14" fill="#FFFFFF"/>
-                          <rect width="20" height="4.66" fill="#FF9933"/>
-                          <rect y="9.33" width="20" height="4.66" fill="#138808"/>
-                          <circle cx="10" cy="7" r="1.5" fill="#000080"/>
-                        </svg>
+                  {['INR', 'USD', 'EUR', 'GBP', 'AUD'].map(curr => (
+                    <button 
+                      key={curr}
+                      onClick={() => {
+                        changeCurrency(curr);
+                        setIsLangMenuOpen(false);
+                      }}
+                      className="w-full text-left px-4 py-2.5 hover:bg-white/10 flex items-center justify-between group transition-colors"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div>
+                          <p className={`text-[13px] font-bold transition-colors ${currency === curr ? 'text-[#FFB700]' : 'text-white group-hover:text-blue-400'}`}>{curr}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-[13px] font-bold text-white group-hover:text-blue-400 transition-colors">India</p>
-                        <p className="text-[10px] text-gray-400">INR | English</p>
-                      </div>
-                    </div>
-                  </button>
-                  <button 
-                    onClick={() => setIsLangMenuOpen(false)}
-                    className="w-full text-left px-4 py-2.5 hover:bg-white/10 flex items-center justify-between group transition-colors"
-                  >
-                    <div className="flex items-center space-x-3">
-                      <div className="w-6 h-[16px] rounded-sm overflow-hidden bg-gray-800 flex-shrink-0 flex items-center justify-center text-sm shadow-sm border border-white/10">
-                         🇺🇸
-                      </div>
-                      <div>
-                        <p className="text-[13px] font-bold text-white group-hover:text-blue-400 transition-colors">USA</p>
-                        <p className="text-[10px] text-gray-400">USD | English</p>
-                      </div>
-                    </div>
-                  </button>
-                  <button 
-                    onClick={() => setIsLangMenuOpen(false)}
-                    className="w-full text-left px-4 py-2.5 hover:bg-white/10 flex items-center justify-between group transition-colors"
-                  >
-                    <div className="flex items-center space-x-3">
-                      <div className="w-6 h-[16px] rounded-sm overflow-hidden bg-gray-800 flex-shrink-0 flex items-center justify-center text-sm shadow-sm border border-white/10">
-                         🇪🇺
-                      </div>
-                      <div>
-                        <p className="text-[13px] font-bold text-white group-hover:text-blue-400 transition-colors">Europe</p>
-                        <p className="text-[10px] text-gray-400">EUR | English</p>
-                      </div>
-                    </div>
-                  </button>
+                    </button>
+                  ))}
                 </div>
               )}
             </div>
 
             {/* Dark Mode Toggle */}
-            <button onClick={toggleDarkMode} className="p-2 rounded-full hover:bg-white/10 text-gray-300 hover:text-white transition-colors">
+            <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-white/10 text-gray-300 hover:text-white transition-colors">
               {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
 

@@ -21,7 +21,7 @@ import Offers from './pages/Offers';
 const App = () => {
   return (
     <Router>
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col min-h-screen dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
         <Navbar />
         <main className="flex-grow">
           <Routes>
