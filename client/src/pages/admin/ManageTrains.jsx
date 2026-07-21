@@ -1,30 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, AlertCircle, Train as TrainIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
+import useAdminData from '../../hooks/useAdminData';
 
 const ManageTrains = () => {
   const { user } = useAuth();
-  const [trains, setTrains] = useState([]);
+  const { data: trains, loading, error, refetch } = useAdminData('/api/trains', 5000);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     trainNumber: '', trainName: '', source: '', destination: '',
     departureTime: '', arrivalTime: ''
   });
-
-  const fetchTrains = async () => {
-    try {
-      const res = await axios.get('http://localhost:5000/api/trains');
-      setTrains(res.data);
-    } catch (err) {
-      toast.error('Failed to load trains');
-    }
-  };
-
-  useEffect(() => {
-    fetchTrains();
-  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -48,7 +36,7 @@ const ManageTrains = () => {
       toast.success('Train added successfully!');
       setShowForm(false);
       setFormData({ trainNumber: '', trainName: '', source: '', destination: '', departureTime: '', arrivalTime: '' });
-      fetchTrains();
+      refetch();
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to add train');
     }
@@ -61,76 +49,104 @@ const ManageTrains = () => {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       toast.success('Train deleted!');
-      fetchTrains();
+      refetch();
     } catch (err) {
       toast.error('Failed to delete train');
     }
   };
 
+  if (loading && !trains) {
+    return <div className="flex justify-center items-center h-64"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#D9281C]"></div></div>;
+  }
+
+  if (error) {
+    return <div className="text-red-500 bg-red-50 p-4 rounded-xl flex items-center"><AlertCircle className="mr-2" /> Error loading trains: {error}</div>;
+  }
+
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">Manage Trains</h2>
-        <button onClick={() => setShowForm(!showForm)} className="btn btn-primary flex items-center">
-          <Plus className="w-4 h-4 mr-2" /> Add Train
+    <div className="space-y-6 animate-fade-in">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-black text-gray-900 tracking-tight">Manage Trains</h2>
+        <button onClick={() => setShowForm(!showForm)} className="bg-[#D9281C] hover:bg-red-700 text-white px-5 py-2.5 rounded-full font-bold flex items-center transition-colors shadow-lg shadow-red-500/30">
+          <Plus className="w-5 h-5 mr-2" /> Add Train
         </button>
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-md mb-8 grid grid-cols-2 gap-4">
-          <input required name="trainNumber" value={formData.trainNumber} onChange={handleChange} placeholder="Train Number" className="input border border-gray-300 rounded px-3 py-2" />
-          <input required name="trainName" value={formData.trainName} onChange={handleChange} placeholder="Train Name" className="input border border-gray-300 rounded px-3 py-2" />
-          <input required name="source" value={formData.source} onChange={handleChange} placeholder="Source Station" className="input border border-gray-300 rounded px-3 py-2" />
-          <input required name="destination" value={formData.destination} onChange={handleChange} placeholder="Destination Station" className="input border border-gray-300 rounded px-3 py-2" />
+        <form onSubmit={handleSubmit} className="glass-light p-8 rounded-2xl shadow-lg mb-8 grid grid-cols-2 gap-6 border border-[#D9281C]/20 animate-fade-in relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#D9281C] to-red-400"></div>
+          <h3 className="col-span-2 text-xl font-bold text-gray-900 mb-2">New Train Details</h3>
+          
+          <input required name="trainNumber" value={formData.trainNumber} onChange={handleChange} placeholder="Train Number (e.g., 12951)" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
+          <input required name="trainName" value={formData.trainName} onChange={handleChange} placeholder="Train Name (e.g., Rajdhani Express)" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
+          <input required name="source" value={formData.source} onChange={handleChange} placeholder="Source Station" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
+          <input required name="destination" value={formData.destination} onChange={handleChange} placeholder="Destination Station" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
+          
           <div className="flex flex-col">
-            <label className="text-sm text-gray-500 mb-1">Departure Time (e.g., 14:30)</label>
-            <input required type="time" name="departureTime" value={formData.departureTime} onChange={handleChange} className="input border border-gray-300 rounded px-3 py-2" />
+            <label className="text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">Departure Time</label>
+            <input required type="time" name="departureTime" value={formData.departureTime} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
           </div>
           <div className="flex flex-col">
-            <label className="text-sm text-gray-500 mb-1">Arrival Time (e.g., 20:45)</label>
-            <input required type="time" name="arrivalTime" value={formData.arrivalTime} onChange={handleChange} className="input border border-gray-300 rounded px-3 py-2" />
+            <label className="text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">Arrival Time</label>
+            <input required type="time" name="arrivalTime" value={formData.arrivalTime} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
           </div>
-          <button type="submit" className="bg-primary-600 text-white font-semibold py-2 px-4 rounded hover:bg-primary-700 transition-colors col-span-2 mt-4">Save Train</button>
+          
+          <div className="col-span-2 flex justify-end mt-4">
+            <button type="button" onClick={() => setShowForm(false)} className="px-6 py-3 text-gray-500 hover:text-gray-700 font-bold mr-4">Cancel</button>
+            <button type="submit" className="bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-xl font-bold transition-colors shadow-md">Save Train</button>
+          </div>
         </form>
       )}
 
-      <div className="bg-white rounded-xl shadow-md overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Train</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Route</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Time</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {trains.map(train => (
-              <tr key={train._id}>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="font-medium text-gray-900">{train.trainName}</div>
-                  <div className="text-sm text-gray-500">{train.trainNumber}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {train.source} → {train.destination}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {train.departureTime} - {train.arrivalTime}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right">
-                  <button onClick={() => handleDelete(train._id)} className="text-red-500 hover:text-red-700">
-                    <Trash2 className="w-5 h-5" />
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {trains.length === 0 && (
+      <div className="glass-light rounded-2xl shadow-sm overflow-hidden border border-gray-100">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-100">
+            <thead className="bg-gray-50/50">
               <tr>
-                <td colSpan="4" className="px-6 py-4 text-center text-gray-500">No trains found.</td>
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Train</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Route</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Time</th>
+                <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-50">
+              {trains && trains.map(train => (
+                <tr key={train._id} className="hover:bg-gray-50/80 transition-colors">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="font-black text-gray-900 flex items-center">
+                      <TrainIcon className="w-4 h-4 mr-2 text-[#D9281C]" />
+                      {train.trainName}
+                    </div>
+                    <div className="text-sm font-medium text-gray-500 ml-6">{train.trainNumber}</div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-700">
+                    <span className="bg-gray-100 px-2 py-1 rounded-md">{train.source}</span>
+                    <span className="mx-2 text-gray-400">→</span>
+                    <span className="bg-gray-100 px-2 py-1 rounded-md">{train.destination}</span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                    <span className="text-gray-900">{train.departureTime}</span> - {train.arrivalTime}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right">
+                    <button onClick={() => handleDelete(train._id)} className="text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-lg transition-colors" title="Delete Train">
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {(!trains || trains.length === 0) && (
+                <tr>
+                  <td colSpan="4" className="px-6 py-12 text-center text-gray-500">
+                    <div className="flex flex-col items-center justify-center">
+                      <TrainIcon className="w-12 h-12 text-gray-300 mb-3" />
+                      <p className="font-medium text-gray-500">No trains found. Add one above.</p>
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

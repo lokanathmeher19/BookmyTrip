@@ -48,41 +48,67 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-md flex flex-col h-full overflow-y-auto">
-        <div className="p-4 border-b">
-          <h2 className="text-xl font-bold text-gray-800 flex items-center">
-            <LayoutDashboard className="w-5 h-5 mr-2 text-primary-600" />
-            Admin Panel
-          </h2>
+    <div className="flex h-screen bg-[#F8FAFC]">
+      {/* Sidebar - Dark Theme matching main app */}
+      <aside className="w-64 bg-gray-900 text-gray-100 shadow-2xl flex flex-col h-full overflow-y-auto border-r border-gray-800">
+        <div className="p-6 border-b border-gray-800 flex items-center justify-between">
+          <div className="flex items-center">
+            <LayoutDashboard className="w-6 h-6 mr-3 text-[#D9281C]" />
+            <h2 className="text-xl font-black tracking-tight font-nunito">
+              <span className="text-white">Admin</span>
+              <span className="text-[#D9281C]">Panel</span>
+            </h2>
+          </div>
         </div>
-        <nav className="flex-1 p-4 space-y-1">
+        
+        <div className="p-4 border-b border-gray-800">
+          <div className="bg-gray-800 rounded-lg p-3 flex items-center shadow-inner">
+            <div className="w-8 h-8 rounded-full bg-[#D9281C] flex items-center justify-center text-white font-bold mr-3 shadow-md">
+              {user.name.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <p className="text-sm font-bold text-white">{user.name}</p>
+              <p className="text-xs text-gray-400">Super Admin</p>
+            </div>
+          </div>
+        </div>
+
+        <nav className="flex-1 p-4 space-y-1.5">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`w-full flex items-center px-4 py-3 rounded-lg transition-colors ${
-                activeTab === tab.id ? 'bg-primary-50 text-primary-700 font-medium' : 'text-gray-600 hover:bg-gray-50'
+              className={`w-full flex items-center px-4 py-3.5 rounded-xl transition-all duration-300 font-medium ${
+                activeTab === tab.id 
+                  ? 'bg-gradient-to-r from-[#D9281C]/20 to-transparent text-[#D9281C] border-l-4 border-[#D9281C]' 
+                  : 'text-gray-400 hover:bg-gray-800 hover:text-gray-200 border-l-4 border-transparent'
               }`}
             >
-              <tab.icon className="w-5 h-5 mr-3" />
+              <tab.icon className={`w-5 h-5 mr-3 transition-colors ${activeTab === tab.id ? 'text-[#D9281C]' : 'text-gray-500'}`} />
               {tab.label}
             </button>
           ))}
         </nav>
+
+        <div className="p-4 border-t border-gray-800">
+          <a href="/" className="flex items-center justify-center w-full py-2.5 px-4 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg transition-colors text-sm font-bold">
+            ← Back to Website
+          </a>
+        </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto bg-gray-50 p-8">
-        {activeTab === 'overview' && <AdminOverview />}
-        {activeTab === 'users' && <ManageUsers />}
-        {activeTab === 'bookings' && <ManageBookings />}
-        {activeTab === 'flights' && <ManageFlights />}
-        { activeTab === 'hotels' && <ManageHotels /> }
-        { activeTab === 'trains' && <ManageTrains /> }
-        { activeTab === 'buses' && <ManageBuses /> }
-        { activeTab === 'offers' && <ManageOffers /> }
+      <main className="flex-1 overflow-auto bg-[#F8FAFC] p-8">
+        <div className="max-w-7xl mx-auto">
+          {activeTab === 'overview' && <AdminOverview />}
+          {activeTab === 'users' && <ManageUsers />}
+          {activeTab === 'bookings' && <ManageBookings />}
+          {activeTab === 'flights' && <ManageFlights />}
+          {activeTab === 'hotels' && <ManageHotels />}
+          {activeTab === 'trains' && <ManageTrains />}
+          {activeTab === 'buses' && <ManageBuses />}
+          {activeTab === 'offers' && <ManageOffers />}
+        </div>
       </main>
     </div>
   );

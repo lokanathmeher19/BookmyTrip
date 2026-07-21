@@ -1,27 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, AlertCircle, Building, Star, MapPin } from 'lucide-react';
 import toast from 'react-hot-toast';
+import useAdminData from '../../hooks/useAdminData';
 
 const ManageHotels = () => {
-  const [hotels, setHotels] = useState([]);
+  const { data: hotels, loading, error, refetch } = useAdminData('/api/hotels/search', 5000);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     name: '', city: '', location: '', rating: '', pricePerNight: '', description: '', images: ''
   });
-
-  const fetchHotels = async () => {
-    try {
-      const res = await axios.get('/api/hotels/search');
-      setHotels(res.data);
-    } catch (err) {
-      toast.error('Failed to load hotels');
-    }
-  };
-
-  useEffect(() => {
-    fetchHotels();
-  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -33,13 +21,13 @@ const ManageHotels = () => {
       const token = localStorage.getItem('token');
       // Convert images comma separated string to array
       const payload = { ...formData, images: formData.images.split(',').map(i => i.trim()) };
-      await axios.post('/api/hotels', payload, {
+      await axios.post('http://localhost:5000/api/hotels', payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Hotel added successfully!');
       setShowForm(false);
       setFormData({ name: '', city: '', location: '', rating: '', pricePerNight: '', description: '', images: '' });
-      fetchHotels();
+      refetch();
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to add hotel');
     }
@@ -49,61 +37,87 @@ const ManageHotels = () => {
     if (!window.confirm('Are you sure you want to delete this hotel?')) return;
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`/api/hotels/${id}`, {
+      await axios.delete(`http://localhost:5000/api/hotels/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Hotel deleted!');
-      fetchHotels();
+      refetch();
     } catch (err) {
       toast.error('Failed to delete hotel');
     }
   };
 
+  if (loading && !hotels) {
+    return <div className="flex justify-center items-center h-64"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#D9281C]"></div></div>;
+  }
+
+  if (error) {
+    return <div className="text-red-500 bg-red-50 p-4 rounded-xl flex items-center"><AlertCircle className="mr-2" /> Error loading hotels: {error}</div>;
+  }
+
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">Manage Hotels</h2>
-        <button onClick={() => setShowForm(!showForm)} className="btn btn-primary flex items-center">
-          <Plus className="w-4 h-4 mr-2" /> Add Hotel
+    <div className="space-y-6 animate-fade-in">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-black text-gray-900 tracking-tight">Manage Hotels</h2>
+        <button onClick={() => setShowForm(!showForm)} className="bg-[#D9281C] hover:bg-red-700 text-white px-5 py-2.5 rounded-full font-bold flex items-center transition-colors shadow-lg shadow-red-500/30">
+          <Plus className="w-5 h-5 mr-2" /> Add Hotel
         </button>
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-md mb-8 grid grid-cols-2 gap-4">
-          <input required name="name" value={formData.name} onChange={handleChange} placeholder="Hotel Name" className="input" />
-          <input required name="city" value={formData.city} onChange={handleChange} placeholder="City" className="input" />
-          <input required name="location" value={formData.location} onChange={handleChange} placeholder="Location/Address" className="input col-span-2" />
-          <input required type="number" step="0.1" name="rating" value={formData.rating} onChange={handleChange} placeholder="Rating (1-5)" className="input" />
-          <input required type="number" name="pricePerNight" value={formData.pricePerNight} onChange={handleChange} placeholder="Price per Night" className="input" />
-          <textarea required name="description" value={formData.description} onChange={handleChange} placeholder="Description" className="input col-span-2 h-20"></textarea>
-          <input required name="images" value={formData.images} onChange={handleChange} placeholder="Image URLs (comma separated)" className="input col-span-2" />
-          <button type="submit" className="btn btn-primary col-span-2 mt-4">Save Hotel</button>
+        <form onSubmit={handleSubmit} className="glass-light p-8 rounded-2xl shadow-lg mb-8 grid grid-cols-2 gap-6 border border-[#D9281C]/20 animate-fade-in relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#D9281C] to-red-400"></div>
+          <h3 className="col-span-2 text-xl font-bold text-gray-900 mb-2">New Hotel Details</h3>
+          
+          <input required name="name" value={formData.name} onChange={handleChange} placeholder="Hotel Name" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
+          <input required name="city" value={formData.city} onChange={handleChange} placeholder="City (e.g., Mumbai)" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
+          <input required name="location" value={formData.location} onChange={handleChange} placeholder="Location/Address" className="col-span-2 w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
+          <input required type="number" step="0.1" name="rating" value={formData.rating} onChange={handleChange} placeholder="Rating (1-5)" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
+          <input required type="number" name="pricePerNight" value={formData.pricePerNight} onChange={handleChange} placeholder="Price per Night (₹)" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
+          <textarea required name="description" value={formData.description} onChange={handleChange} placeholder="Description" className="col-span-2 w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none h-24"></textarea>
+          <input required name="images" value={formData.images} onChange={handleChange} placeholder="Image URLs (comma separated)" className="col-span-2 w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
+          
+          <div className="col-span-2 flex justify-end mt-4">
+            <button type="button" onClick={() => setShowForm(false)} className="px-6 py-3 text-gray-500 hover:text-gray-700 font-bold mr-4">Cancel</button>
+            <button type="submit" className="bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-xl font-bold transition-colors shadow-md">Save Hotel</button>
+          </div>
         </form>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {hotels.map(hotel => (
-          <div key={hotel._id} className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col">
-            <img src={hotel.images[0] || 'https://via.placeholder.com/300x200?text=No+Image'} alt={hotel.name} className="h-48 w-full object-cover" />
-            <div className="p-4 flex-1">
-              <div className="flex justify-between items-start">
-                <h3 className="text-lg font-bold text-gray-900">{hotel.name}</h3>
-                <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full flex items-center">
-                  ⭐ {hotel.rating}
-                </span>
+        {hotels && hotels.map(hotel => (
+          <div key={hotel._id} className="glass-light rounded-2xl shadow-sm overflow-hidden flex flex-col hover-card-effect border border-gray-100 group">
+            <div className="relative h-48 overflow-hidden">
+              <img src={hotel.images[0] || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'} alt={hotel.name} className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" />
+              <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-full flex items-center shadow-md">
+                <Star className="w-4 h-4 text-yellow-500 mr-1 fill-current" />
+                <span className="text-sm font-bold text-gray-800">{hotel.rating}</span>
               </div>
-              <p className="text-gray-500 text-sm mt-1">{hotel.city}</p>
-              <p className="text-primary-600 font-bold mt-2">₹{hotel.pricePerNight} / night</p>
             </div>
-            <div className="px-4 py-3 bg-gray-50 border-t flex justify-end">
-              <button onClick={() => handleDelete(hotel._id)} className="text-red-500 hover:text-red-700 flex items-center text-sm">
-                <Trash2 className="w-4 h-4 mr-1" /> Delete
+            <div className="p-5 flex-1">
+              <h3 className="text-xl font-black text-gray-900 line-clamp-1">{hotel.name}</h3>
+              <div className="flex items-center mt-2 text-sm text-gray-500">
+                <MapPin className="w-4 h-4 mr-1 text-[#D9281C]" />
+                {hotel.city}
+              </div>
+              <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+                <p className="text-2xl font-black text-[#D9281C]">₹{hotel.pricePerNight?.toLocaleString()} <span className="text-sm text-gray-400 font-medium">/night</span></p>
+              </div>
+            </div>
+            <div className="p-3 bg-gray-50 flex justify-end">
+              <button onClick={() => handleDelete(hotel._id)} className="text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-lg transition-colors" title="Delete Hotel">
+                <Trash2 className="w-5 h-5" />
               </button>
             </div>
           </div>
         ))}
       </div>
-      {hotels.length === 0 && <p className="text-center text-gray-500 mt-8">No hotels found.</p>}
+      {(!hotels || hotels.length === 0) && (
+        <div className="text-center py-12">
+          <Building className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <p className="text-lg font-bold text-gray-500">No hotels found.</p>
+        </div>
+      )}
     </div>
   );
 };
