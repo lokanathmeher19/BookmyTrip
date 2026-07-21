@@ -16,8 +16,24 @@ const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
 
   // Protect route
-  if (!user || !user.isAdmin) {
-    return <Navigate to="/" replace />;
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!user.isAdmin) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-100">
+        <div className="bg-white p-8 rounded-xl shadow-lg text-center max-w-md">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">Access Denied</h2>
+          <p className="text-gray-600 mb-6">
+            You must be logged in with an Admin account to view this page. Please log in with an admin user, or set your current user's `isAdmin` flag to true in the database.
+          </p>
+          <a href="/" className="bg-primary text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+            Go Back Home
+          </a>
+        </div>
+      </div>
+    );
   }
 
   const tabs = [
@@ -32,7 +48,7 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <div className="flex h-[calc(100vh-64px)] bg-gray-100">
+    <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
       <aside className="w-64 bg-white shadow-md flex flex-col h-full overflow-y-auto">
         <div className="p-4 border-b">

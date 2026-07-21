@@ -25,6 +25,7 @@ export const registerUser = async (req, res, next) => {
         name: user.name,
         email: user.email,
         phone: user.phone,
+        isAdmin: user.isAdmin,
         token: generateToken(user._id),
       });
     } else {
@@ -48,6 +49,7 @@ export const authUser = async (req, res, next) => {
         name: user.name,
         email: user.email,
         phone: user.phone,
+        isAdmin: user.isAdmin,
         token: generateToken(user._id),
       });
     } else {
@@ -69,6 +71,7 @@ export const getUserProfile = async (req, res, next) => {
         name: user.name,
         email: user.email,
         phone: user.phone,
+        isAdmin: user.isAdmin,
         savedPassengers: user.savedPassengers,
         wishlist: user.wishlist
       });
