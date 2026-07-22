@@ -29,12 +29,12 @@ const ManageOffers = () => {
     e.preventDefault();
     try {
       if (editingId) {
-        await axios.put(`/api/admin/offers/${editingId}`, formData, {
+        await axios.put(`http://localhost:5000/api/admin/offers/${editingId}`, formData, {
           headers: { Authorization: `Bearer ${user.token}` }
         });
         toast.success('Offer updated successfully!');
       } else {
-        await axios.post(`/api/admin/offers`, formData, {
+        await axios.post('http://localhost:5000/api/admin/offers', formData, {
           headers: { Authorization: `Bearer ${user.token}` }
         });
         toast.success('Offer added successfully!');
@@ -63,7 +63,7 @@ const ManageOffers = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this offer?')) return;
     try {
-      await axios.delete(`/api/admin/offers/${id}`, {
+      await axios.delete(`http://localhost:5000/api/admin/offers/${id}`, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       toast.success('Offer deleted!');
@@ -89,91 +89,91 @@ const ManageOffers = () => {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in text-gray-100">
+    <div className="space-y-6 animate-fade-in">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-black text-white tracking-tight">Manage Offers</h2>
-        <button onClick={() => { resetForm(); setShowForm(true); }} className="bg-[#D9281C] hover:bg-red-700 text-white px-5 py-2.5 rounded-full font-bold flex items-center transition-colors shadow-lg shadow-red-900/30">
+        <h2 className="text-2xl font-black text-gray-900 tracking-tight">Manage Offers</h2>
+        <button onClick={() => { resetForm(); setShowForm(true); }} className="bg-[#D9281C] hover:bg-red-700 text-white px-5 py-2.5 rounded-full font-bold flex items-center transition-colors shadow-lg shadow-red-500/30">
           <Plus className="w-5 h-5 mr-2" /> Add Offer
         </button>
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="bg-gray-800/60 backdrop-blur-md p-8 rounded-2xl shadow-lg mb-8 grid grid-cols-2 gap-6 border border-gray-700 animate-fade-in relative overflow-hidden">
+        <form onSubmit={handleSubmit} className="glass-light p-8 rounded-2xl shadow-lg mb-8 grid grid-cols-2 gap-6 border border-[#D9281C]/20 animate-fade-in relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#D9281C] to-red-400"></div>
-          <h3 className="col-span-2 text-xl font-bold text-white mb-2">{editingId ? 'Edit Offer Details' : 'New Offer Details'}</h3>
+          <h3 className="col-span-2 text-xl font-bold text-gray-900 mb-2">{editingId ? 'Edit Offer Details' : 'New Offer Details'}</h3>
           
           <div className="flex flex-col">
-            <label className="text-xs font-bold text-gray-400 mb-1 ml-1 uppercase">Title</label>
-            <input required name="title" value={formData.title} onChange={handleChange} placeholder="e.g. Flight Flash Sale" className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none text-white placeholder-gray-500" />
+            <label className="text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">Title</label>
+            <input required name="title" value={formData.title} onChange={handleChange} placeholder="e.g. Flight Flash Sale" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
           </div>
           <div className="flex flex-col">
-            <label className="text-xs font-bold text-gray-400 mb-1 ml-1 uppercase">Discount Text</label>
-            <input required name="discountText" value={formData.discountText} onChange={handleChange} placeholder="e.g. Flat 15% Off" className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none text-white placeholder-gray-500" />
+            <label className="text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">Discount Text</label>
+            <input required name="discountText" value={formData.discountText} onChange={handleChange} placeholder="e.g. Flat 15% Off" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
           </div>
           <div className="flex flex-col">
-            <label className="text-xs font-bold text-gray-400 mb-1 ml-1 uppercase">Coupon Code</label>
-            <input required name="code" value={formData.code} onChange={handleChange} placeholder="e.g. FLASH15" className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none uppercase font-mono font-bold text-[#D9281C] placeholder-gray-500" />
+            <label className="text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">Coupon Code</label>
+            <input required name="code" value={formData.code} onChange={handleChange} placeholder="e.g. FLASH15" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none uppercase font-mono font-bold text-[#D9281C]" />
           </div>
           <div className="flex flex-col">
-            <label className="text-xs font-bold text-gray-400 mb-1 ml-1 uppercase">Accent Color Class</label>
-            <select name="accentColor" value={formData.accentColor} onChange={handleChange} className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none font-bold text-white">
-              <option value="bg-[#D9281C]" className="bg-gray-800">Brand Red</option>
-              <option value="bg-gray-400" className="bg-gray-800">Silver Gray</option>
-              <option value="bg-emerald-500" className="bg-gray-800">Emerald Green</option>
-              <option value="bg-blue-600" className="bg-gray-800">Ocean Blue</option>
-              <option value="bg-amber-500" className="bg-gray-800">Amber Gold</option>
-              <option value="bg-purple-600" className="bg-gray-800">Royal Purple</option>
+            <label className="text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">Accent Color Class</label>
+            <select name="accentColor" value={formData.accentColor} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none font-bold">
+              <option value="bg-[#D9281C]">Brand Red</option>
+              <option value="bg-gray-900">Charcoal Black</option>
+              <option value="bg-emerald-500">Emerald Green</option>
+              <option value="bg-blue-600">Ocean Blue</option>
+              <option value="bg-amber-500">Amber Gold</option>
+              <option value="bg-purple-600">Royal Purple</option>
             </select>
           </div>
           <div className="flex flex-col">
-            <label className="text-xs font-bold text-gray-400 mb-1 ml-1 uppercase">Bank Name (Optional)</label>
-            <input name="bankName" value={formData.bankName} onChange={handleChange} placeholder="e.g. HDFC Bank" className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none text-white placeholder-gray-500" />
+            <label className="text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">Bank Name (Optional)</label>
+            <input name="bankName" value={formData.bankName} onChange={handleChange} placeholder="e.g. HDFC Bank" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
           </div>
           <div className="flex flex-col">
-            <label className="text-xs font-bold text-gray-400 mb-1 ml-1 uppercase">Terms (Optional)</label>
-            <input name="terms" value={formData.terms} onChange={handleChange} placeholder="e.g. Valid till 31st Oct" className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none text-white placeholder-gray-500" />
+            <label className="text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">Terms (Optional)</label>
+            <input name="terms" value={formData.terms} onChange={handleChange} placeholder="e.g. Valid till 31st Oct" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
           </div>
           
           <div className="col-span-2 flex justify-end mt-4">
-            <button type="button" onClick={resetForm} className="px-6 py-3 text-gray-400 hover:text-white font-bold mr-4">Cancel</button>
-            <button type="submit" className="bg-white hover:bg-gray-200 text-gray-900 px-8 py-3 rounded-xl font-bold transition-colors shadow-md">{editingId ? 'Update Offer' : 'Save Offer'}</button>
+            <button type="button" onClick={resetForm} className="px-6 py-3 text-gray-500 hover:text-gray-700 font-bold mr-4">Cancel</button>
+            <button type="submit" className="bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-xl font-bold transition-colors shadow-md">{editingId ? 'Update Offer' : 'Save Offer'}</button>
           </div>
         </form>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {offers && offers.map(offer => (
-          <div key={offer._id} className="bg-gray-800/60 backdrop-blur-md rounded-2xl shadow-sm border border-gray-700 overflow-hidden relative group hover-card-effect">
+          <div key={offer._id} className="glass-light rounded-2xl shadow-sm border border-gray-100 overflow-hidden relative group hover-card-effect">
             <div className={`h-3 w-full ${offer.accentColor}`}></div>
             <div className="p-6">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center">
-                  <div className={`p-2 rounded-lg ${offer.accentColor} bg-opacity-20 mr-3`}>
+                  <div className={`p-2 rounded-lg ${offer.accentColor} bg-opacity-10 mr-3`}>
                     <Tag className={`w-5 h-5 ${offer.accentColor.replace('bg-', 'text-')}`} />
                   </div>
-                  <h3 className="font-bold text-xl text-white line-clamp-1">{offer.title}</h3>
+                  <h3 className="font-bold text-xl text-gray-900 line-clamp-1">{offer.title}</h3>
                 </div>
                 <div className="flex space-x-1">
-                  <button onClick={() => handleEdit(offer)} className="text-blue-400 hover:text-blue-300 hover:bg-blue-900/30 p-2 rounded-lg transition-colors" title="Edit Offer">
+                  <button onClick={() => handleEdit(offer)} className="text-blue-400 hover:text-blue-600 hover:bg-blue-50 p-2 rounded-lg transition-colors" title="Edit Offer">
                     <Edit2 className="w-5 h-5" />
                   </button>
-                  <button onClick={() => handleDelete(offer._id)} className="text-red-400 hover:text-red-300 hover:bg-red-900/30 p-2 rounded-lg transition-colors" title="Delete Offer">
+                  <button onClick={() => handleDelete(offer._id)} className="text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-lg transition-colors" title="Delete Offer">
                     <Trash2 className="w-5 h-5" />
                   </button>
                 </div>
               </div>
               
-              <p className="text-2xl font-black text-white mb-6">{offer.discountText}</p>
+              <p className="text-2xl font-black text-gray-900 mb-6">{offer.discountText}</p>
               
-              <div className="bg-gray-900/50 backdrop-blur-sm p-4 rounded-xl flex justify-between items-center border-2 border-dashed border-gray-600 group-hover:border-[#D9281C]/50 transition-colors">
-                <span className="text-xs text-gray-400 font-bold uppercase tracking-wider">Use Code</span>
+              <div className="bg-gray-50/80 backdrop-blur-sm p-4 rounded-xl flex justify-between items-center border-2 border-dashed border-gray-200 group-hover:border-[#D9281C]/50 transition-colors">
+                <span className="text-xs text-gray-500 font-bold uppercase tracking-wider">Use Code</span>
                 <div className="flex items-center">
                   <span className={`font-mono font-black text-xl tracking-wider mr-3 ${offer.accentColor.replace('bg-', 'text-')}`}>
                     {offer.code}
                   </span>
                   <button 
                     onClick={() => copyToClipboard(offer.code, offer._id)}
-                    className="p-1.5 text-gray-400 hover:text-gray-200 hover:bg-gray-700 rounded-md transition-colors"
+                    className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-200 rounded-md transition-colors"
                   >
                     {copiedId === offer._id ? <CheckCircle2 className="w-5 h-5 text-emerald-500" /> : <Copy className="w-5 h-5" />}
                   </button>
@@ -181,9 +181,9 @@ const ManageOffers = () => {
               </div>
               
               {(offer.bankName || offer.terms) && (
-                <div className="mt-5 pt-4 border-t border-gray-700 text-xs font-medium text-gray-400 space-y-2">
-                  {offer.bankName && <p className="flex items-center"><span className="w-1.5 h-1.5 rounded-full bg-gray-500 mr-2"></span> Applicable on <span className="font-bold text-gray-300 mx-1">{offer.bankName}</span> Cards</p>}
-                  {offer.terms && <p className="flex items-center"><span className="w-1.5 h-1.5 rounded-full bg-gray-500 mr-2"></span> {offer.terms}</p>}
+                <div className="mt-5 pt-4 border-t border-gray-100 text-xs font-medium text-gray-500 space-y-2">
+                  {offer.bankName && <p className="flex items-center"><span className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-2"></span> Applicable on <span className="font-bold text-gray-700 mx-1">{offer.bankName}</span> Cards</p>}
+                  {offer.terms && <p className="flex items-center"><span className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-2"></span> {offer.terms}</p>}
                 </div>
               )}
             </div>
@@ -191,10 +191,10 @@ const ManageOffers = () => {
         ))}
       </div>
       {(!offers || offers.length === 0) && (
-        <div className="text-center py-16 bg-gray-800/60 backdrop-blur-md rounded-2xl border border-gray-700">
-          <Tag className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-          <h3 className="text-xl font-black text-white mb-2">No active offers</h3>
-          <p className="text-gray-400 font-medium">Click "Add Offer" above to create promotional campaigns.</p>
+        <div className="text-center py-16 glass-light rounded-2xl border border-gray-100">
+          <Tag className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <h3 className="text-xl font-black text-gray-800 mb-2">No active offers</h3>
+          <p className="text-gray-500 font-medium">Click "Add Offer" above to create promotional campaigns.</p>
         </div>
       )}
     </div>
