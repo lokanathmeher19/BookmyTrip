@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Plus, Trash2, AlertCircle, Tag, Copy, CheckCircle2 } from 'lucide-react';
+import { Plus, Trash2, AlertCircle, Tag, Copy, CheckCircle2, Edit2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 import useAdminData from '../../hooks/useAdminData';
@@ -10,6 +10,7 @@ const ManageOffers = () => {
   const { data: offers, loading, error, refetch } = useAdminData('/api/offers', 5000);
   const [showForm, setShowForm] = useState(false);
   const [copiedId, setCopiedId] = useState(null);
+  const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
     title: '', discountText: '', code: '', accentColor: 'bg-[#D9281C]', bankName: '', terms: ''
   });
@@ -18,19 +19,45 @@ const ManageOffers = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const resetForm = () => {
+    setShowForm(false);
+    setEditingId(null);
+    setFormData({ title: '', discountText: '', code: '', accentColor: 'bg-[#D9281C]', bankName: '', terms: '' });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/admin/offers', formData, {
-        headers: { Authorization: `Bearer ${user.token}` }
-      });
-      toast.success('Offer added successfully!');
-      setShowForm(false);
-      setFormData({ title: '', discountText: '', code: '', accentColor: 'bg-[#D9281C]', bankName: '', terms: '' });
+      if (editingId) {
+        await axios.put(`http://localhost:5000/api/admin/offers/${editingId}`, formData, {
+          headers: { Authorization: `Bearer ${user.token}` }
+        });
+        toast.success('Offer updated successfully!');
+      } else {
+        await axios.post('http://localhost:5000/api/admin/offers', formData, {
+          headers: { Authorization: `Bearer ${user.token}` }
+        });
+        toast.success('Offer added successfully!');
+      }
+      resetForm();
       refetch();
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to add offer');
+      toast.error(err.response?.data?.message || 'Failed to save offer');
     }
+  };
+
+  const handleEdit = (offer) => {
+    setFormData({
+      title: offer.title,
+      discountText: offer.discountText,
+      code: offer.code,
+      accentColor: offer.accentColor || 'bg-[#D9281C]',
+      bankName: offer.bankName || '',
+      terms: offer.terms || ''
+    });
+    setEditingId(offer._id);
+    setShowForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id) => {
@@ -65,7 +92,7 @@ const ManageOffers = () => {
     <div className="space-y-6 animate-fade-in">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-black text-gray-900 tracking-tight">Manage Offers</h2>
-        <button onClick={() => setShowForm(!showForm)} className="bg-[#D9281C] hover:bg-red-700 text-white px-5 py-2.5 rounded-full font-bold flex items-center transition-colors shadow-lg shadow-red-500/30">
+        <button onClick={() => { resetForm(); setShowForm(true); }} className="bg-[#D9281C] hover:bg-red-700 text-white px-5 py-2.5 rounded-full font-bold flex items-center transition-colors shadow-lg shadow-red-500/30">
           <Plus className="w-5 h-5 mr-2" /> Add Offer
         </button>
       </div>
@@ -73,7 +100,7 @@ const ManageOffers = () => {
       {showForm && (
         <form onSubmit={handleSubmit} className="glass-light p-8 rounded-2xl shadow-lg mb-8 grid grid-cols-2 gap-6 border border-[#D9281C]/20 animate-fade-in relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#D9281C] to-red-400"></div>
-          <h3 className="col-span-2 text-xl font-bold text-gray-900 mb-2">New Offer Details</h3>
+          <h3 className="col-span-2 text-xl font-bold text-gray-900 mb-2">{editingId ? 'Edit Offer Details' : 'New Offer Details'}</h3>
           
           <div className="flex flex-col">
             <label className="text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">Title</label>
@@ -108,8 +135,8 @@ const ManageOffers = () => {
           </div>
           
           <div className="col-span-2 flex justify-end mt-4">
-            <button type="button" onClick={() => setShowForm(false)} className="px-6 py-3 text-gray-500 hover:text-gray-700 font-bold mr-4">Cancel</button>
-            <button type="submit" className="bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-xl font-bold transition-colors shadow-md">Save Offer</button>
+            <button type="button" onClick={resetForm} className="px-6 py-3 text-gray-500 hover:text-gray-700 font-bold mr-4">Cancel</button>
+            <button type="submit" className="bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-xl font-bold transition-colors shadow-md">{editingId ? 'Update Offer' : 'Save Offer'}</button>
           </div>
         </form>
       )}
@@ -126,9 +153,14 @@ const ManageOffers = () => {
                   </div>
                   <h3 className="font-bold text-xl text-gray-900 line-clamp-1">{offer.title}</h3>
                 </div>
-                <button onClick={() => handleDelete(offer._id)} className="text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-lg transition-colors" title="Delete Offer">
-                  <Trash2 className="w-5 h-5" />
-                </button>
+                <div className="flex space-x-1">
+                  <button onClick={() => handleEdit(offer)} className="text-blue-400 hover:text-blue-600 hover:bg-blue-50 p-2 rounded-lg transition-colors" title="Edit Offer">
+                    <Edit2 className="w-5 h-5" />
+                  </button>
+                  <button onClick={() => handleDelete(offer._id)} className="text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-lg transition-colors" title="Delete Offer">
+                    <Trash2 className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
               
               <p className="text-2xl font-black text-gray-900 mb-6">{offer.discountText}</p>

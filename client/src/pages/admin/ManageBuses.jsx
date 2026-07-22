@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Plus, Trash2, AlertCircle, Bus as BusIcon } from 'lucide-react';
+import { Plus, Trash2, AlertCircle, Bus as BusIcon, Edit2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 import useAdminData from '../../hooks/useAdminData';
@@ -9,6 +9,7 @@ const ManageBuses = () => {
   const { user } = useAuth();
   const { data: buses, loading, error, refetch } = useAdminData('/api/buses/search', 5000);
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
     operator: '', source: '', destination: '',
     departureTime: '', arrivalTime: '', seatType: 'Seater', fare: '', availableSeats: ''
@@ -18,19 +19,47 @@ const ManageBuses = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const resetForm = () => {
+    setShowForm(false);
+    setEditingId(null);
+    setFormData({ operator: '', source: '', destination: '', departureTime: '', arrivalTime: '', seatType: 'Seater', fare: '', availableSeats: '' });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/admin/buses', formData, {
-        headers: { Authorization: `Bearer ${user.token}` }
-      });
-      toast.success('Bus added successfully!');
-      setShowForm(false);
-      setFormData({ operator: '', source: '', destination: '', departureTime: '', arrivalTime: '', seatType: 'Seater', fare: '', availableSeats: '' });
+      if (editingId) {
+        await axios.put(`http://localhost:5000/api/admin/buses/${editingId}`, formData, {
+          headers: { Authorization: `Bearer ${user.token}` }
+        });
+        toast.success('Bus updated successfully!');
+      } else {
+        await axios.post('http://localhost:5000/api/admin/buses', formData, {
+          headers: { Authorization: `Bearer ${user.token}` }
+        });
+        toast.success('Bus added successfully!');
+      }
+      resetForm();
       refetch();
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to add bus');
+      toast.error(err.response?.data?.message || 'Failed to save bus');
     }
+  };
+
+  const handleEdit = (bus) => {
+    setFormData({
+      operator: bus.operator,
+      source: bus.source,
+      destination: bus.destination,
+      departureTime: new Date(bus.departureTime).toISOString().slice(0, 16),
+      arrivalTime: new Date(bus.arrivalTime).toISOString().slice(0, 16),
+      seatType: bus.seatType,
+      fare: bus.fare,
+      availableSeats: bus.availableSeats
+    });
+    setEditingId(bus._id);
+    setShowForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id) => {
@@ -58,7 +87,7 @@ const ManageBuses = () => {
     <div className="space-y-6 animate-fade-in">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-black text-gray-900 tracking-tight">Manage Buses</h2>
-        <button onClick={() => setShowForm(!showForm)} className="bg-[#D9281C] hover:bg-red-700 text-white px-5 py-2.5 rounded-full font-bold flex items-center transition-colors shadow-lg shadow-red-500/30">
+        <button onClick={() => { resetForm(); setShowForm(true); }} className="bg-[#D9281C] hover:bg-red-700 text-white px-5 py-2.5 rounded-full font-bold flex items-center transition-colors shadow-lg shadow-red-500/30">
           <Plus className="w-5 h-5 mr-2" /> Add Bus
         </button>
       </div>
@@ -66,7 +95,7 @@ const ManageBuses = () => {
       {showForm && (
         <form onSubmit={handleSubmit} className="glass-light p-8 rounded-2xl shadow-lg mb-8 grid grid-cols-2 gap-6 border border-[#D9281C]/20 animate-fade-in relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#D9281C] to-red-400"></div>
-          <h3 className="col-span-2 text-xl font-bold text-gray-900 mb-2">New Bus Details</h3>
+          <h3 className="col-span-2 text-xl font-bold text-gray-900 mb-2">{editingId ? 'Edit Bus Details' : 'New Bus Details'}</h3>
           
           <input required name="operator" value={formData.operator} onChange={handleChange} placeholder="Operator Name" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
           <input required name="source" value={formData.source} onChange={handleChange} placeholder="Source City" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
@@ -91,8 +120,8 @@ const ManageBuses = () => {
           <input required type="number" name="availableSeats" value={formData.availableSeats} onChange={handleChange} placeholder="Total Seats" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
           
           <div className="col-span-2 flex justify-end mt-4">
-            <button type="button" onClick={() => setShowForm(false)} className="px-6 py-3 text-gray-500 hover:text-gray-700 font-bold mr-4">Cancel</button>
-            <button type="submit" className="bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-xl font-bold transition-colors shadow-md">Save Bus</button>
+            <button type="button" onClick={resetForm} className="px-6 py-3 text-gray-500 hover:text-gray-700 font-bold mr-4">Cancel</button>
+            <button type="submit" className="bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-xl font-bold transition-colors shadow-md">{editingId ? 'Update Bus' : 'Save Bus'}</button>
           </div>
         </form>
       )}
@@ -131,6 +160,9 @@ const ManageBuses = () => {
                     ₹{bus.fare.toLocaleString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right">
+                    <button onClick={() => handleEdit(bus)} className="text-blue-400 hover:text-blue-600 hover:bg-blue-50 p-2 rounded-lg transition-colors mr-2" title="Edit Bus">
+                      <Edit2 className="w-5 h-5" />
+                    </button>
                     <button onClick={() => handleDelete(bus._id)} className="text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-lg transition-colors" title="Delete Bus">
                       <Trash2 className="w-5 h-5" />
                     </button>

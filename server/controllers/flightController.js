@@ -48,6 +48,26 @@ export const createFlight = async (req, res, next) => {
   }
 };
 
+// @desc    Update a flight (Admin only)
+// @route   PUT /api/flights/:id
+export const updateFlight = async (req, res, next) => {
+  try {
+    const flight = await Flight.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    
+    if (!flight) {
+      res.status(404);
+      throw new Error('Flight not found');
+    }
+
+    // Flush the cache when inventory is updated
+    cache.flushAll();
+
+    res.json(flight);
+  } catch (error) {
+    next(error);
+  }
+};
+
 // @desc    Delete a flight (Admin only)
 // @route   DELETE /api/flights/:id
 export const deleteFlight = async (req, res, next) => {

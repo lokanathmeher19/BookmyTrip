@@ -38,8 +38,9 @@ const ManageBookings = () => {
         </span>
       </div>
       
-      <div className="glass-light rounded-2xl shadow-sm overflow-hidden border border-gray-100">
-        <div className="overflow-x-auto">
+      <div className="glass-light rounded-2xl shadow-sm overflow-hidden border border-gray-100 relative">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#D9281C] to-red-400"></div>
+        <div className="overflow-x-auto mt-1">
           <table className="min-w-full divide-y divide-gray-100">
             <thead className="bg-gray-50/50">
               <tr>

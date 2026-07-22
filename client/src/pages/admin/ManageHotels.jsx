@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Plus, Trash2, AlertCircle, Building, Star, MapPin } from 'lucide-react';
+import { Plus, Trash2, AlertCircle, Building, Star, MapPin, Edit2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useAdminData from '../../hooks/useAdminData';
 
 const ManageHotels = () => {
   const { data: hotels, loading, error, refetch } = useAdminData('/api/hotels/search', 5000);
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
     name: '', city: '', location: '', rating: '', pricePerNight: '', description: '', images: ''
   });
@@ -15,22 +16,49 @@ const ManageHotels = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const resetForm = () => {
+    setShowForm(false);
+    setEditingId(null);
+    setFormData({ name: '', city: '', location: '', rating: '', pricePerNight: '', description: '', images: '' });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      // Convert images comma separated string to array
-      const payload = { ...formData, images: formData.images.split(',').map(i => i.trim()) };
-      await axios.post('http://localhost:5000/api/hotels', payload, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      toast.success('Hotel added successfully!');
-      setShowForm(false);
-      setFormData({ name: '', city: '', location: '', rating: '', pricePerNight: '', description: '', images: '' });
+      const payload = { ...formData, images: typeof formData.images === 'string' ? formData.images.split(',').map(i => i.trim()) : formData.images };
+      
+      if (editingId) {
+        await axios.put(`http://localhost:5000/api/hotels/${editingId}`, payload, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        toast.success('Hotel updated successfully!');
+      } else {
+        await axios.post('http://localhost:5000/api/hotels', payload, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        toast.success('Hotel added successfully!');
+      }
+      resetForm();
       refetch();
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to add hotel');
+      toast.error(err.response?.data?.message || 'Failed to save hotel');
     }
+  };
+
+  const handleEdit = (hotel) => {
+    setFormData({
+      name: hotel.name,
+      city: hotel.city,
+      location: hotel.location,
+      rating: hotel.rating,
+      pricePerNight: hotel.pricePerNight,
+      description: hotel.description,
+      images: hotel.images.join(', ')
+    });
+    setEditingId(hotel._id);
+    setShowForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id) => {
@@ -59,7 +87,7 @@ const ManageHotels = () => {
     <div className="space-y-6 animate-fade-in">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-black text-gray-900 tracking-tight">Manage Hotels</h2>
-        <button onClick={() => setShowForm(!showForm)} className="bg-[#D9281C] hover:bg-red-700 text-white px-5 py-2.5 rounded-full font-bold flex items-center transition-colors shadow-lg shadow-red-500/30">
+        <button onClick={() => { resetForm(); setShowForm(true); }} className="bg-[#D9281C] hover:bg-red-700 text-white px-5 py-2.5 rounded-full font-bold flex items-center transition-colors shadow-lg shadow-red-500/30">
           <Plus className="w-5 h-5 mr-2" /> Add Hotel
         </button>
       </div>
@@ -67,7 +95,7 @@ const ManageHotels = () => {
       {showForm && (
         <form onSubmit={handleSubmit} className="glass-light p-8 rounded-2xl shadow-lg mb-8 grid grid-cols-2 gap-6 border border-[#D9281C]/20 animate-fade-in relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#D9281C] to-red-400"></div>
-          <h3 className="col-span-2 text-xl font-bold text-gray-900 mb-2">New Hotel Details</h3>
+          <h3 className="col-span-2 text-xl font-bold text-gray-900 mb-2">{editingId ? 'Edit Hotel Details' : 'New Hotel Details'}</h3>
           
           <input required name="name" value={formData.name} onChange={handleChange} placeholder="Hotel Name" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
           <input required name="city" value={formData.city} onChange={handleChange} placeholder="City (e.g., Mumbai)" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
@@ -78,8 +106,8 @@ const ManageHotels = () => {
           <input required name="images" value={formData.images} onChange={handleChange} placeholder="Image URLs (comma separated)" className="col-span-2 w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
           
           <div className="col-span-2 flex justify-end mt-4">
-            <button type="button" onClick={() => setShowForm(false)} className="px-6 py-3 text-gray-500 hover:text-gray-700 font-bold mr-4">Cancel</button>
-            <button type="submit" className="bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-xl font-bold transition-colors shadow-md">Save Hotel</button>
+            <button type="button" onClick={resetForm} className="px-6 py-3 text-gray-500 hover:text-gray-700 font-bold mr-4">Cancel</button>
+            <button type="submit" className="bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-xl font-bold transition-colors shadow-md">{editingId ? 'Update Hotel' : 'Save Hotel'}</button>
           </div>
         </form>
       )}
@@ -104,7 +132,10 @@ const ManageHotels = () => {
                 <p className="text-2xl font-black text-[#D9281C]">₹{hotel.pricePerNight?.toLocaleString()} <span className="text-sm text-gray-400 font-medium">/night</span></p>
               </div>
             </div>
-            <div className="p-3 bg-gray-50 flex justify-end">
+            <div className="p-3 bg-gray-50 flex justify-end space-x-2 border-t border-gray-100">
+              <button onClick={() => handleEdit(hotel)} className="text-blue-400 hover:text-blue-600 hover:bg-blue-50 p-2 rounded-lg transition-colors" title="Edit Hotel">
+                <Edit2 className="w-5 h-5" />
+              </button>
               <button onClick={() => handleDelete(hotel._id)} className="text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-lg transition-colors" title="Delete Hotel">
                 <Trash2 className="w-5 h-5" />
               </button>

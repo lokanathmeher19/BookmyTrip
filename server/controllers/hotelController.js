@@ -27,6 +27,23 @@ export const createHotel = async (req, res, next) => {
   }
 };
 
+// @desc    Update a hotel (Admin only)
+// @route   PUT /api/hotels/:id
+export const updateHotel = async (req, res, next) => {
+  try {
+    const hotel = await Hotel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    
+    if (!hotel) {
+      res.status(404);
+      throw new Error('Hotel not found');
+    }
+
+    res.json(hotel);
+  } catch (error) {
+    next(error);
+  }
+};
+
 // @desc    Delete a hotel (Admin only)
 // @route   DELETE /api/hotels/:id
 export const deleteHotel = async (req, res, next) => {

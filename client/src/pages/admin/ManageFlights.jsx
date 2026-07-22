@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Plus, Trash2, AlertCircle, Plane } from 'lucide-react';
+import { Plus, Trash2, AlertCircle, Plane, Edit2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useAdminData from '../../hooks/useAdminData';
 
 const ManageFlights = () => {
   const { data: flights, loading, error, refetch } = useAdminData('/api/flights/search', 5000);
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
     airline: '', flightNumber: '', source: '', destination: '',
     departureTime: '', arrivalTime: '', price: '', availableSeats: ''
@@ -16,20 +17,48 @@ const ManageFlights = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const resetForm = () => {
+    setShowForm(false);
+    setEditingId(null);
+    setFormData({ airline: '', flightNumber: '', source: '', destination: '', departureTime: '', arrivalTime: '', price: '', availableSeats: '' });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/flights', formData, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      toast.success('Flight added successfully!');
-      setShowForm(false);
-      setFormData({ airline: '', flightNumber: '', source: '', destination: '', departureTime: '', arrivalTime: '', price: '', availableSeats: '' });
+      if (editingId) {
+        await axios.put(`http://localhost:5000/api/flights/${editingId}`, formData, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        toast.success('Flight updated successfully!');
+      } else {
+        await axios.post('http://localhost:5000/api/flights', formData, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        toast.success('Flight added successfully!');
+      }
+      resetForm();
       refetch();
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to add flight');
+      toast.error(err.response?.data?.message || 'Failed to save flight');
     }
+  };
+
+  const handleEdit = (flight) => {
+    setFormData({
+      airline: flight.airline,
+      flightNumber: flight.flightNumber,
+      source: flight.source,
+      destination: flight.destination,
+      departureTime: new Date(flight.departureTime).toISOString().slice(0, 16),
+      arrivalTime: new Date(flight.arrivalTime).toISOString().slice(0, 16),
+      price: flight.price,
+      availableSeats: flight.availableSeats
+    });
+    setEditingId(flight._id);
+    setShowForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id) => {
@@ -58,7 +87,7 @@ const ManageFlights = () => {
     <div className="space-y-6 animate-fade-in">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-black text-gray-900 tracking-tight">Manage Flights</h2>
-        <button onClick={() => setShowForm(!showForm)} className="bg-[#D9281C] hover:bg-red-700 text-white px-5 py-2.5 rounded-full font-bold flex items-center transition-colors shadow-lg shadow-red-500/30">
+        <button onClick={() => { resetForm(); setShowForm(true); }} className="bg-[#D9281C] hover:bg-red-700 text-white px-5 py-2.5 rounded-full font-bold flex items-center transition-colors shadow-lg shadow-red-500/30">
           <Plus className="w-5 h-5 mr-2" /> Add Flight
         </button>
       </div>
@@ -66,7 +95,7 @@ const ManageFlights = () => {
       {showForm && (
         <form onSubmit={handleSubmit} className="glass-light p-8 rounded-2xl shadow-lg mb-8 grid grid-cols-2 gap-6 border border-[#D9281C]/20 animate-fade-in relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#D9281C] to-red-400"></div>
-          <h3 className="col-span-2 text-xl font-bold text-gray-900 mb-2">New Flight Details</h3>
+          <h3 className="col-span-2 text-xl font-bold text-gray-900 mb-2">{editingId ? 'Edit Flight Details' : 'New Flight Details'}</h3>
           
           <input required name="airline" value={formData.airline} onChange={handleChange} placeholder="Airline (e.g., Indigo)" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
           <input required name="flightNumber" value={formData.flightNumber} onChange={handleChange} placeholder="Flight Number (e.g., 6E-101)" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
@@ -86,8 +115,8 @@ const ManageFlights = () => {
           <input required type="number" name="availableSeats" value={formData.availableSeats} onChange={handleChange} placeholder="Total Seats" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D9281C] focus:border-transparent transition-all outline-none" />
           
           <div className="col-span-2 flex justify-end mt-4">
-            <button type="button" onClick={() => setShowForm(false)} className="px-6 py-3 text-gray-500 hover:text-gray-700 font-bold mr-4">Cancel</button>
-            <button type="submit" className="bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-xl font-bold transition-colors shadow-md">Save Flight</button>
+            <button type="button" onClick={resetForm} className="px-6 py-3 text-gray-500 hover:text-gray-700 font-bold mr-4">Cancel</button>
+            <button type="submit" className="bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-xl font-bold transition-colors shadow-md">{editingId ? 'Update Flight' : 'Save Flight'}</button>
           </div>
         </form>
       )}
@@ -126,7 +155,10 @@ const ManageFlights = () => {
                     ₹{flight.price.toLocaleString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right">
-                    <button onClick={() => handleDelete(flight._id)} className="text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-lg transition-colors">
+                    <button onClick={() => handleEdit(flight)} className="text-blue-400 hover:text-blue-600 hover:bg-blue-50 p-2 rounded-lg transition-colors mr-2" title="Edit Flight">
+                      <Edit2 className="w-5 h-5" />
+                    </button>
+                    <button onClick={() => handleDelete(flight._id)} className="text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-lg transition-colors" title="Delete Flight">
                       <Trash2 className="w-5 h-5" />
                     </button>
                   </td>
