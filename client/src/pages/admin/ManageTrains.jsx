@@ -30,7 +30,7 @@ const ManageTrains = () => {
         ]
       };
       
-      await axios.post('http://localhost:5000/api/admin/trains', payload, {
+      await axios.post('/api/admin/trains', payload, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       toast.success('Train added successfully!');
@@ -45,7 +45,7 @@ const ManageTrains = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this train?')) return;
     try {
-      await axios.delete(`http://localhost:5000/api/admin/trains/${id}`, {
+      await axios.delete(`/api/admin/trains/${id}`, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       toast.success('Train deleted!');

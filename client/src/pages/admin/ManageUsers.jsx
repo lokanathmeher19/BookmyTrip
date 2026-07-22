@@ -10,7 +10,7 @@ const ManageUsers = () => {
 
   const toggleAdminStatus = async (id, currentStatus) => {
     try {
-      await axios.put(`http://localhost:5000/api/admin/users/${id}/role`, 
+      await axios.put(`/api/admin/users/${id}/role`, 
         { isAdmin: !currentStatus },
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
@@ -23,7 +23,7 @@ const ManageUsers = () => {
   const deleteUser = async (id) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/admin/users/${id}`, {
+        await axios.delete(`/api/admin/users/${id}`, {
           headers: { Authorization: `Bearer ${user.token}` }
         });
         refetch(); // Instantly refetch

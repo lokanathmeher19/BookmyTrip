@@ -29,12 +29,12 @@ const ManageOffers = () => {
     e.preventDefault();
     try {
       if (editingId) {
-        await axios.put(`http://localhost:5000/api/admin/offers/${editingId}`, formData, {
+        await axios.put(`/api/admin/offers/${editingId}`, formData, {
           headers: { Authorization: `Bearer ${user.token}` }
         });
         toast.success('Offer updated successfully!');
       } else {
-        await axios.post('http://localhost:5000/api/admin/offers', formData, {
+        await axios.post('/api/admin/offers', formData, {
           headers: { Authorization: `Bearer ${user.token}` }
         });
         toast.success('Offer added successfully!');
@@ -63,7 +63,7 @@ const ManageOffers = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this offer?')) return;
     try {
-      await axios.delete(`http://localhost:5000/api/admin/offers/${id}`, {
+      await axios.delete(`/api/admin/offers/${id}`, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       toast.success('Offer deleted!');

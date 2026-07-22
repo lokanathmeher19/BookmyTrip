@@ -11,7 +11,7 @@ const ManageBookings = () => {
   const deleteBooking = async (id) => {
     if (window.confirm('Are you sure you want to delete this booking? This action cannot be undone.')) {
       try {
-        await axios.delete(`http://localhost:5000/api/admin/bookings/${id}`, {
+        await axios.delete(`/api/admin/bookings/${id}`, {
           headers: { Authorization: `Bearer ${user.token}` }
         });
         refetch(); // Instantly refetch after delete

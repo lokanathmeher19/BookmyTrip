@@ -29,12 +29,12 @@ const ManageBuses = () => {
     e.preventDefault();
     try {
       if (editingId) {
-        await axios.put(`http://localhost:5000/api/admin/buses/${editingId}`, formData, {
+        await axios.put(`/api/admin/buses/${editingId}`, formData, {
           headers: { Authorization: `Bearer ${user.token}` }
         });
         toast.success('Bus updated successfully!');
       } else {
-        await axios.post('http://localhost:5000/api/admin/buses', formData, {
+        await axios.post('/api/admin/buses', formData, {
           headers: { Authorization: `Bearer ${user.token}` }
         });
         toast.success('Bus added successfully!');
@@ -65,7 +65,7 @@ const ManageBuses = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this bus?')) return;
     try {
-      await axios.delete(`http://localhost:5000/api/admin/buses/${id}`, {
+      await axios.delete(`/api/admin/buses/${id}`, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       toast.success('Bus deleted!');
