@@ -24,4 +24,5 @@ const trainSchema = new mongoose.Schema(
 );
 
 const Train = mongoose.model('Train', trainSchema);
+trainSchema.index({ source: 1, destination: 1 });
 export default Train;

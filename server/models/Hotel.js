@@ -15,4 +15,5 @@ const hotelSchema = new mongoose.Schema(
 );
 
 const Hotel = mongoose.model('Hotel', hotelSchema);
+hotelSchema.index({ city: 1 });
 export default Hotel;

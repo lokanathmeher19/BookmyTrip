@@ -89,3 +89,16 @@ export const deleteFlight = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getFlightById = async (req, res, next) => {
+  try {
+    const flight = await Flight.findById(req.params.id);
+    if (!flight) {
+      res.status(404);
+      throw new Error('Flight not found');
+    }
+    res.json(flight);
+  } catch (error) {
+    next(error);
+  }
+};

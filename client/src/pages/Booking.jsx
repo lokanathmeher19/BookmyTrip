@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -19,9 +19,37 @@ const Booking = () => {
   const [loading, setLoading] = useState(false);
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [insuranceOptIn, setInsuranceOptIn] = useState(true);
+  
+  const [itemDetails, setItemDetails] = useState(null);
+  const [baseFare, setBaseFare] = useState(0);
+  const [pageLoading, setPageLoading] = useState(true);
 
-  const baseFare = 1000;
-  const tax = 100;
+  useEffect(() => {
+    const fetchDetails = async () => {
+      try {
+        const { data } = await api.get(`/${type}s/${id}`);
+        setItemDetails(data);
+        
+        let fare = 0;
+        if (type === 'flight' || type === 'train') {
+          fare = data.classes?.[0]?.fare || 1000;
+        } else if (type === 'bus') {
+          fare = data.fare || 500;
+        } else if (type === 'hotel') {
+          fare = data.pricePerNight || 2000;
+        }
+        setBaseFare(fare);
+      } catch (error) {
+        console.error("Failed to fetch item details", error);
+        toast.error("Failed to load booking details");
+      } finally {
+        setPageLoading(false);
+      }
+    };
+    fetchDetails();
+  }, [id, type]);
+
+  const tax = Math.round(baseFare * 0.1); // 10% tax instead of fixed 100
   // IRCTC style insurance is usually per passenger
   const insuranceCost = insuranceOptIn ? Math.ceil(passengers.length * 0.45) : 0;
   
@@ -90,11 +118,65 @@ const Booking = () => {
     }
   };
 
+  if (pageLoading) {
+    return <div className="flex justify-center items-center h-screen"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-blue"></div></div>;
+  }
+
+  const renderBookingSummary = () => {
+    if (!itemDetails) return null;
+    
+    if (type === 'flight') {
+      return (
+        <div className="bg-blue-50 border border-blue-100 p-4 rounded-xl mb-6 flex justify-between items-center">
+          <div>
+            <p className="text-sm text-blue-600 font-bold uppercase">{itemDetails.airline} • {itemDetails.flightNumber}</p>
+            <p className="text-xl font-black text-gray-900">{itemDetails.source} <span className="text-gray-400 font-normal mx-2">to</span> {itemDetails.destination}</p>
+          </div>
+          <div className="text-right">
+            <p className="text-sm font-bold text-gray-500">Departure</p>
+            <p className="font-bold text-gray-900">{new Date(itemDetails.departureTime).toLocaleDateString()}</p>
+          </div>
+        </div>
+      );
+    } else if (type === 'hotel') {
+      return (
+        <div className="bg-indigo-50 border border-indigo-100 p-4 rounded-xl mb-6 flex justify-between items-center">
+          <div>
+            <p className="text-sm text-indigo-600 font-bold uppercase">{itemDetails.city}</p>
+            <p className="text-xl font-black text-gray-900">{itemDetails.name}</p>
+          </div>
+        </div>
+      );
+    } else if (type === 'train') {
+      return (
+        <div className="bg-orange-50 border border-orange-100 p-4 rounded-xl mb-6 flex justify-between items-center">
+          <div>
+            <p className="text-sm text-orange-600 font-bold uppercase">{itemDetails.trainNumber}</p>
+            <p className="text-xl font-black text-gray-900">{itemDetails.source} <span className="text-gray-400 font-normal mx-2">to</span> {itemDetails.destination}</p>
+          </div>
+        </div>
+      );
+    } else if (type === 'bus') {
+      return (
+        <div className="bg-emerald-50 border border-emerald-100 p-4 rounded-xl mb-6 flex justify-between items-center">
+          <div>
+            <p className="text-sm text-emerald-600 font-bold uppercase">{itemDetails.operator}</p>
+            <p className="text-xl font-black text-gray-900">{itemDetails.source} <span className="text-gray-400 font-normal mx-2">to</span> {itemDetails.destination}</p>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="bg-gray-50 min-h-screen pt-28 pb-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-3xl shadow-md p-8">
-          <h2 className="text-2xl font-bold mb-6 border-b pb-4">Passenger Details</h2>
+          <h2 className="text-2xl font-bold mb-6 border-b pb-4">Booking Summary</h2>
+          {renderBookingSummary()}
+          
+          <h2 className="text-xl font-bold mb-4 mt-8">Passenger Details</h2>
           
           <form onSubmit={handleBooking}>
             {passengers.map((p, idx) => (

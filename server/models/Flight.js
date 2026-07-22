@@ -22,4 +22,5 @@ const flightSchema = new mongoose.Schema(
 );
 
 const Flight = mongoose.model('Flight', flightSchema);
+flightSchema.index({ source: 1, destination: 1 });
 export default Flight;

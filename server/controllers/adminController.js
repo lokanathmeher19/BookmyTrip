@@ -15,10 +15,15 @@ export const getOverviewStats = async (req, res, next) => {
       return acc + (booking.fareBreakdown?.total || 0);
     }, 0);
 
+    const recentBookings = await Booking.find({}).populate('user', 'name email').sort({ createdAt: -1 }).limit(5);
+    const recentUsers = await User.find({}).select('-passwordHash').sort({ createdAt: -1 }).limit(5);
+
     res.json({
       totalUsers,
       totalBookings,
-      totalRevenue
+      totalRevenue,
+      recentBookings,
+      recentUsers
     });
   } catch (error) {
     next(error);

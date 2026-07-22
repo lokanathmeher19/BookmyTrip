@@ -45,3 +45,16 @@ export const getLiveStatus = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getTrainById = async (req, res, next) => {
+  try {
+    const train = await Train.findById(req.params.id);
+    if (!train) {
+      res.status(404);
+      throw new Error('Train not found');
+    }
+    res.json(train);
+  } catch (error) {
+    next(error);
+  }
+};

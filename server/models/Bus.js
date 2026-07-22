@@ -15,4 +15,5 @@ const busSchema = new mongoose.Schema(
 );
 
 const Bus = mongoose.model('Bus', busSchema);
+busSchema.index({ source: 1, destination: 1 });
 export default Bus;

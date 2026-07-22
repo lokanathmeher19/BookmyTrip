@@ -14,3 +14,16 @@ export const searchBuses = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getBusById = async (req, res, next) => {
+  try {
+    const bus = await Bus.findById(req.params.id);
+    if (!bus) {
+      res.status(404);
+      throw new Error('Bus not found');
+    }
+    res.json(bus);
+  } catch (error) {
+    next(error);
+  }
+};

@@ -62,3 +62,16 @@ export const deleteHotel = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getHotelById = async (req, res, next) => {
+  try {
+    const hotel = await Hotel.findById(req.params.id);
+    if (!hotel) {
+      res.status(404);
+      throw new Error('Hotel not found');
+    }
+    res.json(hotel);
+  } catch (error) {
+    next(error);
+  }
+};
